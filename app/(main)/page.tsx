@@ -1,8 +1,8 @@
 import { db } from '@/db';
 import { chats } from '@/db/schema';
 import { stackServerApp } from '@/stack/server';
-import { refresh } from 'next/cache';
-import { notFound } from 'next/navigation';
+import { refresh, revalidatePath } from 'next/cache';
+import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import invariant from 'tiny-invariant';
 
@@ -28,16 +28,18 @@ async function Content() {
     const title = formData.get('title');
     invariant(typeof title === 'string');
 
-    await db.insert(chats).values({
-      userId,
-      title,
-    });
+    const [newChat] = await db
+      .insert(chats)
+      .values({ userId, title })
+      .returning();
+
     refresh();
+    redirect(`/chat/${newChat.id}`);
   }
 
   return (
     <div className="m-4">
-      <p>{user.displayName}</p>
+      <p>Hello, {user.displayName}</p>
 
       <div className="mt-8">
         <form action={createChat}>
