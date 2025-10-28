@@ -1,6 +1,18 @@
-import { StackHandler } from "@stackframe/stack"; 
-import { stackServerApp } from "../../../stack/server"; 
+import { StackHandler } from '@stackframe/stack';
+import { stackServerApp } from '../../../stack/server';
+import { connection } from 'next/server';
+import { Suspense } from 'react';
 
-export default function Handler(props: unknown) { 
-   return <StackHandler fullPage app = { stackServerApp } routeProps = { props } />; 
- } 
+export default async function Handler(props: PageProps<'/handler/[...stack]'>) {
+  return (
+    <Suspense>
+      <Content {...props} />
+    </Suspense>
+  );
+}
+
+async function Content(props: PageProps<'/handler/[...stack]'>) {
+  await connection();
+
+  return <StackHandler fullPage app={stackServerApp} routeProps={props} />;
+}
