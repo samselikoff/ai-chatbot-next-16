@@ -1,8 +1,8 @@
 import { db } from '@/db';
 import { chats } from '@/db/schema';
 import { stackServerApp } from '@/stack/server';
-import { refresh, revalidatePath } from 'next/cache';
-import { notFound, redirect } from 'next/navigation';
+import { refresh } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import invariant from 'tiny-invariant';
 
@@ -14,33 +14,27 @@ export default async function Home() {
   );
 }
 
-async function Content() {
+async function createChat(formData: FormData) {
+  'use server';
   const user = await stackServerApp.getUser();
-
   if (!user) {
-    notFound();
+    return;
   }
+  const title = formData.get('title');
+  invariant(typeof title === 'string');
 
-  const userId = user.id;
+  const [newChat] = await db
+    .insert(chats)
+    .values({ userId: user.id, title })
+    .returning();
 
-  async function createChat(formData: FormData) {
-    'use server';
-    const title = formData.get('title');
-    invariant(typeof title === 'string');
+  refresh();
+  redirect(`/chat/${newChat.id}`);
+}
 
-    const [newChat] = await db
-      .insert(chats)
-      .values({ userId, title })
-      .returning();
-
-    refresh();
-    redirect(`/chat/${newChat.id}`);
-  }
-
+async function Content() {
   return (
     <div className="m-4">
-      <p>Hello, {user.displayName}</p>
-
       <div className="mt-8">
         <form action={createChat}>
           <div>
