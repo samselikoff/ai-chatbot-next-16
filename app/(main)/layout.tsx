@@ -6,9 +6,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex">
+    <div className="flex w-full">
       <Sidebar />
-      <main>{children}</main>
+      <main className="grow">{children}</main>
     </div>
   );
 }

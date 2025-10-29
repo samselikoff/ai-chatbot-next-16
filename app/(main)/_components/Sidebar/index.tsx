@@ -10,7 +10,7 @@ import { getCurrentUser } from '@/lib/current-user';
 export async function Sidebar() {
   return (
     <nav className="w-60 h-dvh bg-gray-100 flex flex-col">
-      <div className="border-b border-gray-300">
+      <div className="border-b border-gray-300 flex flex-col">
         <p className="mx-5 mt-3 text-sm font-semibold text-gray-700">
           Next 16 Chatbot
         </p>
@@ -24,7 +24,7 @@ export async function Sidebar() {
       </div>
 
       <Suspense>
-        <div className="flex flex-col overflow-y-auto grow">
+        <div className="flex flex-col overflow-y-auto grow py-2">
           <Chats />
         </div>
 
@@ -33,6 +33,32 @@ export async function Sidebar() {
         </div>
       </Suspense>
     </nav>
+  );
+}
+
+async function Chats() {
+  const currentUser = await getCurrentUser();
+
+  const chats = await db.query.chats.findMany({
+    orderBy: (t, { desc }) => desc(t.createdAt),
+    where: (t, { eq }) => eq(t.userId, currentUser.id),
+  });
+
+  return (
+    <>
+      {chats.map((chat) => (
+        <ChatLink
+          key={chat.id}
+          href={`/chat/${chat.id}`}
+          className="mx-2 px-3 py-2 rounded-lg hover:bg-gray-200
+            data-active:bg-blue-500 data-active:text-white
+            text-sm text-gray-800 font-medium
+          "
+        >
+          {chat.title}
+        </ChatLink>
+      ))}
+    </>
   );
 }
 
@@ -62,31 +88,5 @@ async function UserInfo() {
         </form>
       </div>
     </div>
-  );
-}
-
-async function Chats() {
-  const currentUser = await getCurrentUser();
-
-  const chats = await db.query.chats.findMany({
-    orderBy: (t, { desc }) => desc(t.createdAt),
-    where: (t, { eq }) => eq(t.userId, currentUser.id),
-  });
-
-  return (
-    <>
-      {chats.map((chat) => (
-        <ChatLink
-          key={chat.id}
-          href={`/chat/${chat.id}`}
-          className="mx-2 px-3 py-2 rounded-lg hover:bg-gray-200
-            data-active:bg-blue-500 data-active:text-white
-            text-sm text-gray-800 font-medium
-          "
-        >
-          {chat.title}
-        </ChatLink>
-      ))}
-    </>
   );
 }

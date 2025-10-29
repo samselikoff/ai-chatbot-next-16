@@ -1,6 +1,7 @@
 import { db } from '@/db';
-import { chats } from '@/db/schema';
+import { chats, messages } from '@/db/schema';
 import { stackServerApp } from '@/stack/server';
+import { count, eq } from 'drizzle-orm';
 import { refresh } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -20,16 +21,25 @@ async function createChat(formData: FormData) {
   if (!user) {
     return;
   }
-  const title = formData.get('title');
-  invariant(typeof title === 'string');
+  const message = formData.get('message');
+  invariant(typeof message === 'string');
+
+  const [existingChatCount] = await db
+    .select({ count: count() })
+    .from(chats)
+    .where(eq(chats.userId, user.id));
 
   const [newChat] = await db
     .insert(chats)
-    .values({ userId: user.id, title })
+    .values({ userId: user.id, title: `Chat ${existingChatCount.count + 1}` })
     .returning();
 
-  // redirect(`/chat/${newChat.id}`);
+  await db
+    .insert(messages)
+    .values({ chatId: newChat.id, content: message, position: 1 });
+
   refresh();
+  redirect(`/chat/${newChat.id}`);
 }
 
 async function Content() {
@@ -39,9 +49,9 @@ async function Content() {
         <form action={createChat}>
           <div>
             <input
-              name="title"
+              name="message"
               type="text"
-              placeholder="New chat..."
+              placeholder="Enter a message..."
               className="border px-2 py-1 rounded"
               required
             />
@@ -49,7 +59,7 @@ async function Content() {
 
           <div className="mt-2">
             <button
-              className="bg-blue-500 text-white font-medium px-2 py-1 rounded"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-2 py-1 rounded"
               type="submit"
             >
               Create

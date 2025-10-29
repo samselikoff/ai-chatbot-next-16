@@ -23,7 +23,15 @@ async function Content({ params }: { params: Params }) {
 
   return (
     <div className="p-4">
-      <p>{chat?.title}</p>
+      <p className="text-center font-semibold">{chat?.title}</p>
+
+      <div className="max-w-lg mx-auto mt-8">
+        {chat.messages.map((message) => (
+          <p className="text-right" key={message.id}>
+            {message.content}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
@@ -33,6 +41,9 @@ async function getChat(id: string) {
   await new Promise((resolve) => setTimeout(resolve, 2_000));
   const chat = await db.query.chats.findFirst({
     where: (t, { eq }) => eq(t.id, id),
+    with: {
+      messages: true,
+    },
   });
 
   if (!chat) notFound();
