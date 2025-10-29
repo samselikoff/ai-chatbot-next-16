@@ -11,7 +11,7 @@ export const unstable_prefetch = {
 
 export default async function Page({ params }: { params: Params }) {
   return (
-    <Suspense>
+    <Suspense fallback="Loading chat...">
       <Content params={params} />
     </Suspense>
   );
@@ -30,6 +30,7 @@ async function Content({ params }: { params: Params }) {
 
 async function getChat(id: string) {
   'use cache';
+  await new Promise((resolve) => setTimeout(resolve, 2_000));
   const chat = await db.query.chats.findFirst({
     where: (t, { eq }) => eq(t.id, id),
   });

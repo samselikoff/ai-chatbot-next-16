@@ -28,8 +28,8 @@ async function createChat(formData: FormData) {
     .values({ userId: user.id, title })
     .returning();
 
+  // redirect(`/chat/${newChat.id}`);
   refresh();
-  redirect(`/chat/${newChat.id}`);
 }
 
 async function Content() {
