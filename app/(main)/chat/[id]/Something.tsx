@@ -9,11 +9,10 @@ export function Something({ id }: { id: string }) {
   const { newMessage } = useProvider();
 
   useEffect(() => {
-    if (!didRun.current) {
+    if (!didRun.current && newMessage) {
       doSomething(id, newMessage);
       didRun.current = true;
     }
-    //
   }, [id, newMessage]);
 
   return (

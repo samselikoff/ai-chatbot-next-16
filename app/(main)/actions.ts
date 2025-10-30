@@ -7,19 +7,6 @@ import { count, eq } from 'drizzle-orm';
 import { refresh } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 
-// export async function doSomething(id: string) {
-//   await new Promise((resolve) => setTimeout(resolve, 2_000));
-//   console.log('server action');
-//   // after(async () => {
-//   //   await new Promise((resolve) => setTimeout(resolve, 3_000));
-//   //   console.log('foo');
-
-//   // });
-//   redirect(`/new-chat/${id}`, RedirectType.replace);
-
-//   // redirect(`/new-chat/${id}?new`);
-// }
-
 export async function doSomething(id: string, message: string) {
   const user = await stackServerApp.getUser();
   if (!user) {
@@ -45,5 +32,5 @@ export async function doSomething(id: string, message: string) {
     .values({ chatId: newChat.id, content: message, position: 1 });
 
   refresh();
-  redirect(`/new-chat/${newChat.id}`, RedirectType.replace);
+  redirect(`/chat/${newChat.id}`, RedirectType.replace);
 }

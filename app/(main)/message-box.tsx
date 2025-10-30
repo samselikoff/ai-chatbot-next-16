@@ -5,14 +5,14 @@ import { useRouter } from 'next/navigation';
 import invariant from 'tiny-invariant';
 import { useProvider } from './_components/Provider';
 
-export function Form({ newId }: { newId: string }) {
+export function MessageBox({ newId }: { newId: string }) {
   const router = useRouter();
   const { setNewMessage } = useProvider();
-  const newUrl = `/new-chat/${newId}?new`;
+  const newUrl = `/chat/${newId}?new`;
 
   return (
     <div>
-      <Link href={newUrl}>asdf</Link>
+      <Link href={newUrl} />
       <form
         action={async (formData) => {
           const message = formData.get('message');

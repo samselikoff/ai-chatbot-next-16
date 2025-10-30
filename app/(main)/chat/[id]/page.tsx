@@ -1,25 +1,43 @@
+import { Suspense } from 'react';
+import { Something } from './Something';
 import { db } from '@/db';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-
-type Params = PageProps<'/chat/[id]'>['params'];
 
 export const unstable_prefetch = {
   mode: 'runtime',
   samples: [{}],
 };
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page(props: PageProps<'/chat/[id]'>) {
   return (
-    <Suspense fallback="Loading chat...">
-      <Content params={params} />
+    <Suspense fallback="loading...">
+      <Content {...props} />
     </Suspense>
   );
 }
 
-async function Content({ params }: { params: Params }) {
-  const { id } = await params;
-  const chat = await getChat(id);
+async function Content(props: PageProps<'/chat/[id]'>) {
+  const { id } = await props.params;
+  const searchParams = await props.searchParams;
+
+  return searchParams.new === '' ? (
+    <Something id={id} />
+  ) : (
+    <ServerChat id={id} />
+  );
+}
+
+async function ServerChat({ id }: { id: string }) {
+  'use cache';
+
+  const chat = await db.query.chats.findFirst({
+    where: (t, { eq }) => eq(t.id, id),
+    with: {
+      messages: true,
+    },
+  });
+
+  if (!chat) notFound();
 
   return (
     <div className="p-4">
@@ -34,19 +52,4 @@ async function Content({ params }: { params: Params }) {
       </div>
     </div>
   );
-}
-
-async function getChat(id: string) {
-  'use cache';
-  await new Promise((resolve) => setTimeout(resolve, 2_000));
-  const chat = await db.query.chats.findFirst({
-    where: (t, { eq }) => eq(t.id, id),
-    with: {
-      messages: true,
-    },
-  });
-
-  if (!chat) notFound();
-
-  return chat;
 }

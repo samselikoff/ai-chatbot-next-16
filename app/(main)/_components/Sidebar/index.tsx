@@ -25,7 +25,7 @@ export async function Sidebar() {
 
       <Suspense>
         <div className="flex flex-col overflow-y-auto grow py-2">
-          {/* <Chats /> */}
+          <Chats />
         </div>
 
         <div className="flex flex-col shrink-0">
