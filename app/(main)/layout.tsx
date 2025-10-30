@@ -1,3 +1,4 @@
+import { Provider } from './_components/Provider';
 import { Sidebar } from './_components/Sidebar';
 
 export default function RootLayout({
@@ -6,9 +7,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex w-full">
-      <Sidebar />
-      <main className="grow">{children}</main>
-    </div>
+    <Provider>
+      <div className="flex w-full">
+        <Sidebar />
+        <main className="grow">{children}</main>
+      </div>
+    </Provider>
   );
 }

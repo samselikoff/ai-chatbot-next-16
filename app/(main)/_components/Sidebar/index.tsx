@@ -9,7 +9,7 @@ import { getCurrentUser } from '@/lib/current-user';
 
 export async function Sidebar() {
   return (
-    <nav className="w-60 h-dvh bg-gray-100 flex flex-col">
+    <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col">
       <div className="border-b border-gray-300 flex flex-col">
         <p className="mx-5 mt-3 text-sm font-semibold text-gray-700">
           Next 16 Chatbot
@@ -25,7 +25,7 @@ export async function Sidebar() {
 
       <Suspense>
         <div className="flex flex-col overflow-y-auto grow py-2">
-          <Chats />
+          {/* <Chats /> */}
         </div>
 
         <div className="flex flex-col shrink-0">
