@@ -6,8 +6,10 @@ import { stackServerApp } from '@/stack/server';
 import { count, eq } from 'drizzle-orm';
 import { refresh } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
+import { after } from 'next/server';
 
-export async function doSomething(id: string, message: string) {
+export async function createChat(id: string, message: string) {
+  // after(async () => {
   const user = await stackServerApp.getUser();
   if (!user) {
     return;
@@ -31,6 +33,13 @@ export async function doSomething(id: string, message: string) {
     .insert(messages)
     .values({ chatId: newChat.id, content: message, position: 1 });
 
-  refresh();
+  await new Promise((resolve) => setTimeout(resolve, 2_000));
+
+  // redirect(`/chat/${newChat.id}`, RedirectType.replace);
+  // });
+
+  // refresh();
   redirect(`/chat/${newChat.id}`, RedirectType.replace);
+
+  // redirect(`/chat/${id}?new`);
 }

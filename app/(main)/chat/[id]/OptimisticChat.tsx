@@ -1,16 +1,16 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { doSomething } from '../../actions';
+import { createChat } from '../../actions';
 import { useProvider } from '../../_components/Provider';
 
-export function Something({ id }: { id: string }) {
+export function OptimisticChat({ id }: { id: string }) {
   const didRun = useRef(false);
   const { newMessage } = useProvider();
 
   useEffect(() => {
     if (!didRun.current && newMessage) {
-      doSomething(id, newMessage);
+      createChat(id, newMessage);
       didRun.current = true;
     }
   }, [id, newMessage]);

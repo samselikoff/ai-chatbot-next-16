@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Something } from './Something';
+import { OptimisticChat } from './OptimisticChat';
 import { db } from '@/db';
 import { notFound } from 'next/navigation';
 
@@ -17,14 +17,12 @@ export default async function Page(props: PageProps<'/chat/[id]'>) {
 }
 
 async function Content(props: PageProps<'/chat/[id]'>) {
+  await new Promise((resolve) => setTimeout(resolve, 2_000));
   const { id } = await props.params;
   const searchParams = await props.searchParams;
+  const shouldCreateChat = searchParams.new === '';
 
-  return searchParams.new === '' ? (
-    <Something id={id} />
-  ) : (
-    <ServerChat id={id} />
-  );
+  return shouldCreateChat ? <OptimisticChat id={id} /> : <ServerChat id={id} />;
 }
 
 async function ServerChat({ id }: { id: string }) {
