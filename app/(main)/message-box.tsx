@@ -1,35 +1,56 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import invariant from 'tiny-invariant';
 import { useProvider } from './_components/Provider';
+import { useRouter } from 'next/navigation';
+import { createChat, sleepAction } from './actions';
 // import { createChat } from './actions';
 // import { useEffect } from 'react';
 
 export function MessageBox({ newId }: { newId: string }) {
   const router = useRouter();
-  const { setNewMessage } = useProvider();
-  const newUrl = `/chat/${newId}?new`;
-  // const pathname = usePathname();
-
-  // useEffect(() => {
-  //   return () => {
-  //     console.log(window.location.pathname);
-  //     // This value has the new URL... kick off createChat action here?
-  //   };
-  // }, [pathname]);
+  const provider = useProvider();
+  const newUrl = `/chat/${newId}`;
 
   return (
     <div>
-      <Link href={newUrl} />
+      {/* <form
+        action={() => {
+          router.push('/chat/ad9c4102-4823-4e70-b7d3-40a1e74bd181');
+        }}
+      >
+        <button type="submit">Navigate to another chat</button>
+      </form> */}
+
+      {/* <button
+        onClick={() => {
+          // router.push('/about');
+          router.push('/chat/ad9c4102-4823-4e70-b7d3-40a1e74bd181');
+        }}
+      >
+        Navigate via router.push
+      </button> */}
+
+      {/* <Link href={newUrl} /> */}
       <form
-        action={(formData) => {
+        action={async (formData) => {
           const message = formData.get('message');
           invariant(typeof message === 'string');
-          setNewMessage(message);
+          // setNewMessage(message);
 
-          router.push(newUrl);
+          // await createChat(newId, message);
+          provider.dispatch({ type: 'createChat', id: newId, message });
+
+          // await sleepAction();
+          // router.push(`/chat/${newId}?new`);
+
+          // router.push('/chat/ad9c4102-4823-4e70-b7d3-40a1e74bd181');
+          // router.push(newUrl);
+          // await p;
+
+          // window.history.pushState({}, '', newUrl);
         }}
       >
         <input type="hidden" readOnly name="id" value={newId} />

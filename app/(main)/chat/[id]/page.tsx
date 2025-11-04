@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
-import { OptimisticChat } from './OptimisticChat';
+import { OptimisticChat } from './_components/OptimisticChat';
 import { db } from '@/db';
 import { notFound } from 'next/navigation';
+import { ChatLog } from './_components/ChatLog';
 
 export const unstable_prefetch = {
   mode: 'runtime',
@@ -9,6 +10,7 @@ export const unstable_prefetch = {
 };
 
 export default async function Page(props: PageProps<'/chat/[id]'>) {
+  console.log('chat page');
   return (
     <Suspense fallback="loading...">
       <Content {...props} />
@@ -17,12 +19,13 @@ export default async function Page(props: PageProps<'/chat/[id]'>) {
 }
 
 async function Content(props: PageProps<'/chat/[id]'>) {
-  await new Promise((resolve) => setTimeout(resolve, 2_000));
+  // await new Promise((resolve) => setTimeout(resolve, 2_000));
   const { id } = await props.params;
   const searchParams = await props.searchParams;
-  const shouldCreateChat = searchParams.new === '';
+  const isUnsavedChat = searchParams.new === '';
 
-  return shouldCreateChat ? <OptimisticChat id={id} /> : <ServerChat id={id} />;
+  // return shouldCreateChat ? <OptimisticChat id={id} /> : <ServerChat id={id} />;
+  return isUnsavedChat ? <OptimisticChat id={id} /> : <ServerChat id={id} />;
 }
 
 async function ServerChat({ id }: { id: string }) {
@@ -31,23 +34,20 @@ async function ServerChat({ id }: { id: string }) {
   const chat = await db.query.chats.findFirst({
     where: (t, { eq }) => eq(t.id, id),
     with: {
-      messages: true,
+      messages: {
+        columns: {
+          id: true,
+          content: true,
+        },
+      },
+    },
+    columns: {
+      id: true,
+      title: true,
     },
   });
 
   if (!chat) notFound();
 
-  return (
-    <div className="p-4">
-      <p className="text-center font-semibold">{chat?.title}</p>
-
-      <div className="max-w-lg mx-auto mt-8">
-        {chat.messages.map((message) => (
-          <p className="text-right" key={message.id}>
-            {message.content}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
+  return <ChatLog chat={chat} />;
 }

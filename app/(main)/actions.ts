@@ -10,10 +10,15 @@ import { after } from 'next/server';
 
 export async function createChat(id: string, message: string) {
   // after(async () => {
-  const user = await stackServerApp.getUser();
-  if (!user) {
-    return;
-  }
+  // await new Promise((resolve) => setTimeout(resolve, 2_000));
+  // const user = await stackServerApp.getUser();
+
+  // if (!user) {
+  //   return;
+  // }
+  // await new Promise((resolve) => setTimeout(resolve, 5_000));
+
+  const user = { id: 'c332348b-30f9-4747-981f-22721233eeef' };
 
   const [existingChatCount] = await db
     .select({ count: count() })
@@ -33,13 +38,22 @@ export async function createChat(id: string, message: string) {
     .insert(messages)
     .values({ chatId: newChat.id, content: message, position: 1 });
 
-  await new Promise((resolve) => setTimeout(resolve, 2_000));
+  // await new Promise((resolve) => setTimeout(resolve, 4_000));
 
   // redirect(`/chat/${newChat.id}`, RedirectType.replace);
   // });
 
   // refresh();
-  redirect(`/chat/${newChat.id}`, RedirectType.replace);
+  // redirect(`/chat/${newChat.id}`, RedirectType.replace);
 
   // redirect(`/chat/${id}?new`);
+
+  refresh();
+  // redirect(`/chat/${id}`);
+  // redirect(`/chat/b9f2134c-0258-4eaf-8f8a-0a1b9d7afb40`);
+}
+
+export async function sleepAction() {
+  await new Promise((resolve) => setTimeout(resolve, 4_000));
+  redirect('/');
 }

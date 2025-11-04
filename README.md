@@ -1,4 +1,30 @@
 ```jsx
+
+export async function Page() {
+  return (
+    <Suspense>
+      <Content />
+    </Suspense>
+  );
+}
+
+async function Content() {
+  const token = (await cookies()).get('user-token')
+  const userId = await getCurrentUser(token)
+  const data = await getDataForUser(userId)
+
+  return <div>{data.map(() => /* .. */)}</div>
+}
+
+async function getDataForUser(userId: string) {
+  'use cache'
+
+  return db.posts.findMany({ where: (t, {eq}) => eq(t.userId, userId) })
+}
+
+```
+
+```jsx
 const [state, dispatch] = useActionState(
   async () => {
     await actionThatRedirects();
