@@ -1,23 +1,27 @@
-import { connection } from 'next/server';
-import { Suspense } from 'react';
+'use client';
+
+import { useOptimistic } from 'react';
+import { createChat } from './actions';
 import { MessageBox } from './message-box';
 
-export default async function Home() {
-  return (
-    <Suspense>
-      <Content />
-    </Suspense>
-  );
-}
-
-async function Content() {
-  await connection();
-  const newId = crypto.randomUUID();
+export default function Home() {
+  const [optimisticMessage, setOptimisticMessage] = useOptimistic<
+    null | string
+  >(null);
 
   return (
     <div className="m-4">
       <div className="mt-8">
-        <MessageBox newId={newId} />
+        {optimisticMessage && <p>{optimisticMessage}</p>}
+
+        <MessageBox
+          submitAction={async (message) => {
+            setOptimisticMessage(message);
+            const newId = window.crypto.randomUUID();
+
+            await createChat(newId, message);
+          }}
+        />
       </div>
     </div>
   );

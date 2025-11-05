@@ -9,10 +9,14 @@ import { createChat, sleepAction } from './actions';
 // import { createChat } from './actions';
 // import { useEffect } from 'react';
 
-export function MessageBox({ newId }: { newId: string }) {
+export function MessageBox({
+  submitAction,
+}: {
+  submitAction: (message: string) => Promise<void>;
+}) {
   const router = useRouter();
   const provider = useProvider();
-  const newUrl = `/chat/${newId}`;
+  // const newUrl = `/chat/${newId}`;
 
   return (
     <div>
@@ -38,10 +42,12 @@ export function MessageBox({ newId }: { newId: string }) {
         action={async (formData) => {
           const message = formData.get('message');
           invariant(typeof message === 'string');
-          // setNewMessage(message);
+          await submitAction(message);
+          // const newId = window.crypto.randomUUID();
+          // // setNewMessage(message);
 
           // await createChat(newId, message);
-          provider.dispatch({ type: 'createChat', id: newId, message });
+          // provider.dispatch({ type: 'createChat', id: newId, message });
 
           // await sleepAction();
           // router.push(`/chat/${newId}?new`);
@@ -50,10 +56,10 @@ export function MessageBox({ newId }: { newId: string }) {
           // router.push(newUrl);
           // await p;
 
-          // window.history.pushState({}, '', newUrl);
+          // window.history.pushState({}, '', `/chat/${newId}`);
         }}
       >
-        <input type="hidden" readOnly name="id" value={newId} />
+        {/* <input type="hidden" readOnly name="id" value={newId} /> */}
         <div>
           <input
             name="message"

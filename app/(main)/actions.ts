@@ -11,19 +11,23 @@ import { after } from 'next/server';
 export async function createChat(id: string, message: string) {
   // after(async () => {
   // await new Promise((resolve) => setTimeout(resolve, 2_000));
-  // const user = await stackServerApp.getUser();
+  // console.time('createChat');
+  const user = await stackServerApp.getUser();
+  // console.timeLog('createChat', 'getUser');
 
-  // if (!user) {
-  //   return;
-  // }
+  if (!user) {
+    return;
+  }
   // await new Promise((resolve) => setTimeout(resolve, 5_000));
 
-  const user = { id: 'c332348b-30f9-4747-981f-22721233eeef' };
+  // const user = { id: 'c332348b-30f9-4747-981f-22721233eeef' };
 
   const [existingChatCount] = await db
     .select({ count: count() })
     .from(chats)
     .where(eq(chats.userId, user.id));
+
+  // console.timeLog('createChat', 'existingChatCount');
 
   const [newChat] = await db
     .insert(chats)
@@ -33,10 +37,13 @@ export async function createChat(id: string, message: string) {
       title: `Chat ${existingChatCount.count + 1}`,
     })
     .returning();
+  // console.timeLog('createChat', 'insertChat');
 
   await db
     .insert(messages)
     .values({ chatId: newChat.id, content: message, position: 1 });
+
+  // console.timeEnd('createChat');
 
   // await new Promise((resolve) => setTimeout(resolve, 4_000));
 
@@ -48,7 +55,7 @@ export async function createChat(id: string, message: string) {
 
   // redirect(`/chat/${id}?new`);
 
-  refresh();
+  // refresh();
   // redirect(`/chat/${id}`);
   // redirect(`/chat/b9f2134c-0258-4eaf-8f8a-0a1b9d7afb40`);
 }

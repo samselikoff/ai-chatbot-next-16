@@ -44,11 +44,19 @@ const Context = createContext<{
 });
 
 export function Provider({ children }: { children: ReactNode }) {
+  // const router = useRouter();
   const [currentState, dispatch] = useActionState(
     async (state: State, action: Action): Promise<State> => {
       switch (action.type) {
         case 'createChat':
+          console.log('?');
+          // setOptimisticState({
+          //   status: 'will-create-chat',
+          //   id: action.id,
+          //   message: action.message,
+          // });
           await createChat(action.id, action.message);
+          // router.push(`/chat/${action.id}`);
 
           return { status: 'idle' };
         default:
@@ -57,6 +65,9 @@ export function Provider({ children }: { children: ReactNode }) {
     },
     initialState
   );
+  const [optimisticState, setOptimisticState] = useOptimistic(currentState);
+
+  console.log(optimisticState);
 
   // provider.dispatch({ type: 'createChat', id: newId, message });
   // const currentState = initialState;
