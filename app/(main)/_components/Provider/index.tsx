@@ -6,12 +6,15 @@ import {
   ReactNode,
   use,
   useActionState,
-  useEffect,
   useOptimistic,
-  useReducer,
+  useState,
+  useSyncExternalStore,
 } from 'react';
-import { createChat } from '../../actions';
-import { useRouter } from 'next/navigation';
+import { fetchAnswerStream, saveAssistantMessage } from './actions';
+import { Stream } from 'openai/streaming';
+import { ResponseStreamEvent } from 'openai/resources/responses/responses.mjs';
+import { readStreamableValue } from '@ai-sdk/rsc';
+import { refresh } from 'next/cache';
 
 type State =
   | {
@@ -33,17 +36,63 @@ type Action =
     }
   | { type: 'reset' };
 
+export type OpenAIStream = Stream<ResponseStreamEvent> & {
+  _request_id?: string | null;
+};
+
 const initialState: State = { status: 'idle' };
 
 const Context = createContext<{
   state: State;
   dispatch: Dispatch<Action>;
+  getCompletion: (chatId: string) => Promise<void>;
+  // result: null | OpenAIStream;
+  results: Partial<Record<string, string>>;
 }>({
   state: initialState,
   dispatch: () => {},
+  getCompletion: async () => {},
+  results: {},
 });
 
+// let nextId = 0;
+// let todos = [{ id: nextId++, text: 'Todo #1' }];
+// let listeners = [];
+
+// export const todosStore = {
+//   async getCompletion() {
+//     // const res = await something();
+//     const res = await fetch('http://localhost:3000/api/completions');
+//     console.log(res);
+//     // await new Promise((resolve) => setTimeout(resolve, 10_000));
+//     console.log('done');
+//     // todos = [...todos, { id: nextId++, text: 'Todo #' + nextId }];
+//     // emitChange();
+//   },
+//   subscribe(listener) {
+//     listeners = [...listeners, listener];
+//     return () => {
+//       listeners = listeners.filter((l) => l !== listener);
+//     };
+//   },
+//   getSnapshot() {
+//     return todos;
+//   },
+// };
+
+// function emitChange() {
+//   for (let listener of listeners) {
+//     listener();
+//   }
+// }
+
 export function Provider({ children }: { children: ReactNode }) {
+  // const todos = useSyncExternalStore(
+  //   todosStore.subscribe,
+  //   todosStore.getSnapshot,
+  //   todosStore.getSnapshot
+  // );
+
   // const router = useRouter();
   const [currentState, dispatch] = useActionState(
     async (state: State, action: Action): Promise<State> => {
@@ -55,7 +104,7 @@ export function Provider({ children }: { children: ReactNode }) {
           //   id: action.id,
           //   message: action.message,
           // });
-          await createChat(action.id, action.message);
+          // await createChat(action.id, action.message);
           // router.push(`/chat/${action.id}`);
 
           return { status: 'idle' };
@@ -65,63 +114,41 @@ export function Provider({ children }: { children: ReactNode }) {
     },
     initialState
   );
-  const [optimisticState, setOptimisticState] = useOptimistic(currentState);
-
-  console.log(optimisticState);
-
-  // provider.dispatch({ type: 'createChat', id: newId, message });
-  // const currentState = initialState;
-  // async function dispatch(action: Action) {
-  //   if (action.type === 'createChat') {
-  //     await createChat(action.id, action.message);
-  //   }
-  // }
-
-  // console.log('rendering provider');
-
   // const [optimisticState, setOptimisticState] = useOptimistic(currentState);
 
-  // console.log(currentState);
-  // console.log(optimisticState);
+  // const [result, setResult] = useState<null | OpenAIStream>(null);
+  // const [optimisticResult, setOptimisticResult] = useOptimistic(results);
+  // const [result, setResult] = useState('');
+  const [results, setResults] = useState<Partial<Record<string, string>>>({});
 
-  // const [currentState, dispatch] = useReducer(
-  //   (state: State, action: Action): State => {
-  //     // console.log(state, action);
-  //     switch (action.type) {
-  //       case 'createChat':
-  //         return {
-  //           ...state,
-  //           status: 'will-create-chat',
-  //           id: action.id,
-  //           message: action.message,
-  //           effect() {
-  //             createChat(action.id, action.message);
-  //             return { type: 'reset' };
-  //           },
-  //         };
-  //         return state;
+  async function getCompletion(chatId: string) {
+    const answerStream = await fetchAnswerStream();
 
-  //       case 'reset':
-  //         return { status: 'idle' };
+    let answerText = '';
+    for await (const delta of readStreamableValue(answerStream)) {
+      answerText += delta;
+      setResults((latest) => ({
+        ...latest,
+        [chatId]: answerText,
+      }));
+    }
 
-  //       default:
-  //         return state;
-  //     }
-  //   },
-  //   initialState
-  // );
-  // console.log(currentState);
-
-  // useEffect(() => {
-  //   if (currentState.effect) {
-  //     const effect = currentState.effect;
-  //     const nextAction = effect();
-  //     dispatch(nextAction);
-  //   }
-  // }, [currentState]);
+    await saveAssistantMessage(chatId, answerText);
+    setResults((latest) => {
+      delete latest[chatId];
+      return latest;
+    });
+  }
 
   return (
-    <Context.Provider value={{ state: currentState, dispatch }}>
+    <Context.Provider
+      value={{
+        state: currentState,
+        dispatch,
+        getCompletion,
+        results: results,
+      }}
+    >
       {children}
     </Context.Provider>
   );

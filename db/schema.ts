@@ -2,6 +2,7 @@ import { relations } from 'drizzle-orm';
 import {
   index,
   integer,
+  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -31,6 +32,7 @@ export const chats = pgTable(
   }
 );
 
+export const messageRoleEnum = pgEnum('message_role', ['user', 'assistant']);
 export const messages = pgTable(
   'messages',
   {
@@ -40,6 +42,7 @@ export const messages = pgTable(
       .references(() => chats.id, { onDelete: 'cascade' }),
     content: text('content').notNull(),
     position: integer('position').notNull(),
+    role: messageRoleEnum('role').notNull(),
     ...timestamps,
   },
   (t) => {

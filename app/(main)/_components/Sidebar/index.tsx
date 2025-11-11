@@ -52,7 +52,7 @@ async function Chats() {
           href={`/chat/${chat.id}`}
           className="mx-2 px-3 py-2 rounded-lg hover:bg-gray-200
             data-active:bg-blue-500 data-active:text-white
-            text-sm text-gray-800 font-medium
+            text-sm text-gray-900
           "
         >
           {chat.title}

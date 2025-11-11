@@ -7,8 +7,10 @@ import { count, eq } from 'drizzle-orm';
 import { refresh } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 import { after } from 'next/server';
+import { ClientChat } from './chat/[id]/_components/ChatLog';
+import OpenAI from 'openai';
 
-export async function createChat(id: string, message: string) {
+export async function createChat(unsafeChatData: ClientChat) {
   // after(async () => {
   // await new Promise((resolve) => setTimeout(resolve, 2_000));
   // console.time('createChat');
@@ -29,19 +31,28 @@ export async function createChat(id: string, message: string) {
 
   // console.timeLog('createChat', 'existingChatCount');
 
-  const [newChat] = await db
+  const [chat] = await db
     .insert(chats)
     .values({
-      id,
+      id: unsafeChatData.id,
       userId: user.id,
       title: `Chat ${existingChatCount.count + 1}`,
     })
     .returning();
+
   // console.timeLog('createChat', 'insertChat');
 
-  await db
-    .insert(messages)
-    .values({ chatId: newChat.id, content: message, position: 1 });
+  await db.insert(messages).values({
+    id: unsafeChatData.messages[0].id,
+    chatId: chat.id,
+    content: unsafeChatData.messages[0].content,
+    position: 1,
+    role: 'user',
+  });
+
+  redirect(`/chat/${chat.id}`);
+
+  // return 123;
 
   // console.timeEnd('createChat');
 
@@ -56,11 +67,20 @@ export async function createChat(id: string, message: string) {
   // redirect(`/chat/${id}?new`);
 
   // refresh();
-  // redirect(`/chat/${id}`);
   // redirect(`/chat/b9f2134c-0258-4eaf-8f8a-0a1b9d7afb40`);
 }
 
-export async function sleepAction() {
-  await new Promise((resolve) => setTimeout(resolve, 4_000));
-  redirect('/');
+export async function anotherAction() {
+  const client = new OpenAI();
+
+  const response = await client.responses.create({
+    model: 'gpt-4.1',
+    input: 'tell me a short story',
+    stream: true,
+  });
+
+  return response;
+  // await new Promise((resolve) => setTimeout(resolve, 6_000));
+  // await new Promise((resolve) => setTimeout(resolve, 4_000));
+  // redirect('/');
 }
