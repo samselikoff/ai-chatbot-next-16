@@ -10,6 +10,7 @@ export default function RootLayout({
     <Provider>
       <div className="flex w-full">
         <Sidebar />
+
         <main className="grow">{children}</main>
       </div>
     </Provider>

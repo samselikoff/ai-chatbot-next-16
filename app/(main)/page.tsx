@@ -1,14 +1,16 @@
 'use client';
 
 import { useOptimistic } from 'react';
+import { ChatLog, ClientChat } from './_components/ChatLog';
+import { MessageBox } from './_components/MessageBox';
 import { useProvider } from './_components/Provider';
 import { createChat } from './actions';
-import { Chat, ChatLog, ClientChat } from './chat/[id]/_components/ChatLog';
-import { MessageBox } from './message-box';
 
 export default function Home() {
   const provider = useProvider();
-  const [optimisticChat, setOptimisticChat] = useOptimistic<null | Chat>(null);
+  const [optimisticChat, setOptimisticChat] = useOptimistic<null | ClientChat>(
+    null
+  );
 
   return (
     <div className="h-dvh flex flex-col max-w-2xl mx-auto px-4 justify-center">
@@ -30,6 +32,7 @@ export default function Home() {
                 id: window.crypto.randomUUID(),
                 content: message,
                 role: 'user',
+                createdAt: undefined,
               },
             ],
           };

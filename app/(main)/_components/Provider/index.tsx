@@ -1,20 +1,17 @@
 'use client';
 
+import { readStreamableValue } from '@ai-sdk/rsc';
+import { ResponseStreamEvent } from 'openai/resources/responses/responses.mjs';
+import { Stream } from 'openai/streaming';
 import {
   createContext,
   Dispatch,
   ReactNode,
   use,
   useActionState,
-  useOptimistic,
   useState,
-  useSyncExternalStore,
 } from 'react';
 import { fetchAnswerStream, saveAssistantMessage } from './actions';
-import { Stream } from 'openai/streaming';
-import { ResponseStreamEvent } from 'openai/resources/responses/responses.mjs';
-import { readStreamableValue } from '@ai-sdk/rsc';
-import { refresh } from 'next/cache';
 
 type State =
   | {
@@ -55,45 +52,7 @@ const Context = createContext<{
   results: {},
 });
 
-// let nextId = 0;
-// let todos = [{ id: nextId++, text: 'Todo #1' }];
-// let listeners = [];
-
-// export const todosStore = {
-//   async getCompletion() {
-//     // const res = await something();
-//     const res = await fetch('http://localhost:3000/api/completions');
-//     console.log(res);
-//     // await new Promise((resolve) => setTimeout(resolve, 10_000));
-//     console.log('done');
-//     // todos = [...todos, { id: nextId++, text: 'Todo #' + nextId }];
-//     // emitChange();
-//   },
-//   subscribe(listener) {
-//     listeners = [...listeners, listener];
-//     return () => {
-//       listeners = listeners.filter((l) => l !== listener);
-//     };
-//   },
-//   getSnapshot() {
-//     return todos;
-//   },
-// };
-
-// function emitChange() {
-//   for (let listener of listeners) {
-//     listener();
-//   }
-// }
-
 export function Provider({ children }: { children: ReactNode }) {
-  // const todos = useSyncExternalStore(
-  //   todosStore.subscribe,
-  //   todosStore.getSnapshot,
-  //   todosStore.getSnapshot
-  // );
-
-  // const router = useRouter();
   const [currentState, dispatch] = useActionState(
     async (state: State, action: Action): Promise<State> => {
       switch (action.type) {
@@ -114,11 +73,7 @@ export function Provider({ children }: { children: ReactNode }) {
     },
     initialState
   );
-  // const [optimisticState, setOptimisticState] = useOptimistic(currentState);
 
-  // const [result, setResult] = useState<null | OpenAIStream>(null);
-  // const [optimisticResult, setOptimisticResult] = useOptimistic(results);
-  // const [result, setResult] = useState('');
   const [results, setResults] = useState<Partial<Record<string, string>>>({});
 
   async function getCompletion(chatId: string) {

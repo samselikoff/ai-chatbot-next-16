@@ -6,7 +6,7 @@ import { openai } from '@ai-sdk/openai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { streamText } from 'ai';
 import { sql } from 'drizzle-orm';
-import { refresh, updateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 
 export async function fetchAnswerStream() {
   const stream = createStreamableValue('');
@@ -37,7 +37,6 @@ export async function saveAssistantMessage(chatId: string, content: string) {
     })
     .returning();
 
-  // refresh();
   updateTag(`chat:${chatId}`);
   return result[0];
 }

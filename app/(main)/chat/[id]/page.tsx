@@ -1,8 +1,8 @@
 import { db } from '@/db';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { MessageBox } from '../../message-box';
-import { ChatLog } from './_components/ChatLog';
+import { MessageBox } from '../../_components/MessageBox';
+import { ChatLog } from '../../_components/ChatLog';
 import { stackServerApp } from '@/stack/server';
 import { cacheTag } from 'next/cache';
 
