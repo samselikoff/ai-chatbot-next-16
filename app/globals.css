@@ -3,3 +3,15 @@
 @theme {
   --font-sans: var(--font-geist-sans);
 }
+
+/* @keyframes scale {
+  0%,
+  100% {
+    opacity: 50%;
+    scale: 80%;
+  }
+  50% {
+    opacity: 100%;
+    scale: 100%;
+  }
+} */

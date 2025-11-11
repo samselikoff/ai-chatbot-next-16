@@ -7,14 +7,15 @@ import { createStreamableValue } from '@ai-sdk/rsc';
 import { streamText } from 'ai';
 import { sql } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
+import { ClientMessage } from '../ChatLog';
 
-export async function fetchAnswerStream() {
+export async function fetchAnswerStream(content: string) {
   const stream = createStreamableValue('');
 
   (async () => {
     const { textStream } = streamText({
       model: openai('gpt-3.5-turbo'),
-      prompt: 'why is the sky blue?',
+      prompt: content,
     });
     for await (const delta of textStream) {
       stream.update(delta);
@@ -26,13 +27,17 @@ export async function fetchAnswerStream() {
   return stream.value;
 }
 
-export async function saveAssistantMessage(chatId: string, content: string) {
+export async function saveAssistantMessage(
+  chatId: string,
+  unsafeData: ClientMessage
+) {
   const result = await db
     .insert(messages)
     .values({
+      id: unsafeData.id,
       chatId,
-      content,
-      position: sql`COALESCE((SELECT MAX(position) + 1 FROM ${messages} WHERE ${messages.chatId} = ${chatId}), 0)`,
+      content: unsafeData.content,
+      position: sql`COALESCE((SELECT MAX(position) FROM ${messages} WHERE ${messages.chatId} = ${chatId}), 1)`,
       role: 'assistant',
     })
     .returning();

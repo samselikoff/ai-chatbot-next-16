@@ -9,9 +9,11 @@ import {
   ReactNode,
   use,
   useActionState,
+  useOptimistic,
   useState,
 } from 'react';
 import { fetchAnswerStream, saveAssistantMessage } from './actions';
+import { ClientMessage } from '../ChatLog';
 
 type State =
   | {
@@ -42,9 +44,9 @@ const initialState: State = { status: 'idle' };
 const Context = createContext<{
   state: State;
   dispatch: Dispatch<Action>;
-  getCompletion: (chatId: string) => Promise<void>;
+  getCompletion: (chatId: string, message: string) => Promise<void>;
   // result: null | OpenAIStream;
-  results: Partial<Record<string, string>>;
+  results: Partial<Record<string, ClientMessage>>;
 }>({
   state: initialState,
   dispatch: () => {},
@@ -74,21 +76,33 @@ export function Provider({ children }: { children: ReactNode }) {
     initialState
   );
 
-  const [results, setResults] = useState<Partial<Record<string, string>>>({});
+  const [results, setResults] = useState<
+    Partial<Record<string, ClientMessage>>
+  >({});
+  const [optimisticResults, setOptimisticResults] = useOptimistic(results);
 
-  async function getCompletion(chatId: string) {
-    const answerStream = await fetchAnswerStream();
+  async function getCompletion(chatId: string, content: string) {
+    const assistantMessage: ClientMessage = {
+      id: window.crypto.randomUUID(),
+      content: '',
+      role: 'assistant',
+      createdAt: undefined,
+    };
+    setOptimisticResults((latest) => ({
+      ...latest,
+      [chatId]: assistantMessage,
+    }));
+    const answerStream = await fetchAnswerStream(content);
 
-    let answerText = '';
     for await (const delta of readStreamableValue(answerStream)) {
-      answerText += delta;
+      assistantMessage.content += delta;
       setResults((latest) => ({
         ...latest,
-        [chatId]: answerText,
+        [chatId]: assistantMessage,
       }));
     }
 
-    await saveAssistantMessage(chatId, answerText);
+    await saveAssistantMessage(chatId, assistantMessage);
     setResults((latest) => {
       delete latest[chatId];
       return latest;
@@ -101,7 +115,7 @@ export function Provider({ children }: { children: ReactNode }) {
         state: currentState,
         dispatch,
         getCompletion,
-        results: results,
+        results: optimisticResults,
       }}
     >
       {children}

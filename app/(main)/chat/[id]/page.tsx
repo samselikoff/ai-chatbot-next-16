@@ -55,6 +55,7 @@ async function ServerChat({ id }: { id: string }) {
           content: true,
           role: true,
           createdAt: true,
+          position: true,
         },
       },
     },
@@ -65,6 +66,7 @@ async function ServerChat({ id }: { id: string }) {
   });
 
   if (!chat) notFound();
+  console.log(chat);
 
   return <ChatLog chat={chat} />;
 }

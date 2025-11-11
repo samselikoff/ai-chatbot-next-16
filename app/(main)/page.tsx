@@ -39,7 +39,7 @@ export default function Home() {
 
           setOptimisticChat(clientChat);
 
-          provider.getCompletion(chatId);
+          provider.getCompletion(chatId, message);
 
           await createChat(clientChat);
         }}
