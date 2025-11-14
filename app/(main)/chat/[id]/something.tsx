@@ -4,7 +4,7 @@ import { useOptimistic } from 'react';
 import { Chat, ChatLog, Message } from '../../_components/ChatLog';
 import { MessageBox } from '../../_components/MessageBox';
 import { useProvider } from '../../_components/Provider';
-import { continueChat, saveMessages } from '../../actions';
+import { saveMessages } from '../../actions';
 
 export function Something({ chat }: { chat: Chat }) {
   const provider = useProvider();
@@ -47,10 +47,7 @@ export function Something({ chat }: { chat: Chat }) {
             assistantMessage,
           ]);
 
-          provider.cache.set(
-            assistantMessage.id,
-            continueChat(assistantMessage.chatId, userMessage)
-          );
+          provider.getResponse(assistantMessage, userMessage);
 
           await saveMessages([userMessage, assistantMessage]);
         }}

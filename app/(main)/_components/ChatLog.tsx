@@ -1,9 +1,6 @@
 'use client';
 
 import { useProvider } from '@/app/(main)/_components/Provider';
-import { readStreamableValue, StreamableValue } from '@ai-sdk/rsc';
-import { Suspense, use, useEffect, useRef, useState } from 'react';
-import { completeMessage } from '../actions';
 import Spinner from './Spinner';
 
 export type Chat = { id: string; title?: string | null; messages: Message[] };
@@ -48,79 +45,26 @@ function UserMessage({ message }: { message: Message }) {
 
 function AssistantMessage({ message }: { message: Message }) {
   const provider = useProvider();
+  const content =
+    message.status === 'DONE'
+      ? message.content
+      : provider.streamingMessages[message.id];
 
-  if (message.status === 'DONE') {
-    return (
-      <div>
-        <p>{message.content}</p>
+  return (
+    <div>
+      {content ? (
+        <p>{content}</p>
+      ) : (
+        <div className="size-[1lh] flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+
+      {message.status === 'DONE' && (
         <div className="flex mt-2">
           <span className="text-sm text-gray-500">Saved</span>
         </div>
-      </div>
-    );
-  } else {
-    return <p>{provider.streamText}</p>;
-  }
-
-  // const stream = provider.cache.get(message.id);
-
-  // if (!stream) {
-  //   return <p>Failed stream</p>;
-  // }
-
-  // return (
-  //   <Suspense
-  //     fallback={
-  //       <div className="size-[1lh] flex items-center justify-center">
-  //         <Spinner />
-  //       </div>
-  //     }
-  //   >
-  //     <StreamReader
-  //       streamPromise={stream}
-  //       completeAction={async (streamValue) => {
-  //         await completeMessage(message.id, streamValue, message.chatId);
-  //       }}
-  //     />
-  //   </Suspense>
-  // );
-}
-
-function StreamReader({
-  streamPromise,
-  completeAction,
-}: {
-  streamPromise: Promise<StreamableValue<string, unknown>>;
-  completeAction: (result: string) => Promise<void>;
-}) {
-  const stream = use(streamPromise);
-  const [response, setResponse] = useState('');
-  const hasStarted = useRef(false);
-
-  useEffect(() => {
-    if (hasStarted.current) return;
-
-    hasStarted.current = true;
-    async function f() {
-      let message = '';
-      for await (const delta of readStreamableValue(stream)) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        message += delta;
-        setResponse(message);
-      }
-
-      console.log('6');
-      await completeAction(message);
-    }
-
-    f();
-  }, [completeAction, stream]);
-
-  return response ? (
-    <p>{response}</p>
-  ) : (
-    <div className="size-[1lh] flex items-center justify-center">
-      <Spinner />
+      )}
     </div>
   );
 }

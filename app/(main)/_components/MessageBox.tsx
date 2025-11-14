@@ -35,7 +35,7 @@ export function MessageBox({
 
         <div className="absolute right-2.5 inset-y-2.5 flex items-center justify-center">
           <button
-            className="bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-full w-full h-full aspect-square inline-flex items-center justify-center focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2 disabled:opacity-50"
+            className="bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-full w-full h-full aspect-square inline-flex items-center justify-center focus-visible:outline-2 focus-visible:outline-gray-500 focus-visible:outline-offset-2 disabled:opacity-50"
             type="submit"
           >
             <ArrowUpIcon className="size-5" />

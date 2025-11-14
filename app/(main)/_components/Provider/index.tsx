@@ -1,6 +1,6 @@
 'use client';
 
-import { readStreamableValue, StreamableValue } from '@ai-sdk/rsc';
+import { readStreamableValue } from '@ai-sdk/rsc';
 import {
   createContext,
   ReactNode,
@@ -8,26 +8,24 @@ import {
   use,
   useState,
 } from 'react';
-import { Message } from '../ChatLog';
 import { completeMessage, continueChat } from '../../actions';
+import { Message } from '../ChatLog';
 
 const Context = createContext<{
-  cache: Map<string, Promise<StreamableValue<string, unknown>>>;
   getResponse: (
     assistantMessage: Message,
     userMessage: Message
   ) => Promise<void>;
-  streamText: string;
+  streamingMessages: Partial<Record<string, string>>;
 }>({
-  cache: new Map(),
   getResponse: async () => {},
-  streamText: '',
+  streamingMessages: {},
 });
 
-const cache = new Map<string, Promise<StreamableValue<string, unknown>>>();
-
 export function Provider({ children }: { children: ReactNode }) {
-  const [streamText, setStreamText] = useState('');
+  const [streamingMessages, setStreamingMessages] = useState<
+    Partial<Record<string, string>>
+  >({});
 
   async function getResponse(assistantMessage: Message, userMessage: Message) {
     const stream = await continueChat(userMessage);
@@ -35,17 +33,23 @@ export function Provider({ children }: { children: ReactNode }) {
     let response = '';
     for await (const delta of readStreamableValue(stream)) {
       response += delta;
-      setStreamText(response);
+      setStreamingMessages((prev) => ({
+        ...prev,
+        [assistantMessage.id]: response,
+      }));
     }
 
     startTransition(async () => {
-      setStreamText('');
+      setStreamingMessages((prev) => ({
+        ...prev,
+        [assistantMessage.id]: '',
+      }));
       await completeMessage(assistantMessage, response);
     });
   }
 
   return (
-    <Context.Provider value={{ cache, getResponse, streamText }}>
+    <Context.Provider value={{ getResponse, streamingMessages }}>
       {children}
     </Context.Provider>
   );
