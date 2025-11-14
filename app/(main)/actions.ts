@@ -39,28 +39,15 @@ export async function createChat(clientChat: Chat) {
   redirect(`/chat/${clientChat.id}`);
 }
 
-export async function completeMessage(
-  id: string,
-  content: string,
-  chatId: string
-) {
-  await db
-    .update(messages)
-    .set({ content, status: 'DONE' })
-    .where(eq(messages.id, id));
-
-  updateTag(`chat:${chatId}`);
-}
-
 export async function saveMessages(newMessages: Message[]) {
   await db.insert(messages).values(newMessages);
 
   updateTag(`chat:${newMessages[0].chatId}`);
 }
 
-export async function continueChat(chatId: string, newMessage: Message) {
+export async function continueChat(userMessage: Message) {
   const existingMessages = await db.query.messages.findMany({
-    where: (t, { and, eq }) => and(eq(t.chatId, chatId), eq(t.status, 'DONE')),
+    where: (t, { eq }) => eq(t.chatId, userMessage.chatId),
     orderBy: (t, { asc }) => asc(t.position),
     columns: {
       role: true,
@@ -75,7 +62,7 @@ export async function continueChat(chatId: string, newMessage: Message) {
       model: openai('gpt-3.5-turbo'),
       prompt: [
         ...existingMessages,
-        { role: 'user', content: newMessage.content },
+        { role: 'user', content: userMessage.content },
       ],
     });
     for await (const delta of textStream) {
@@ -86,4 +73,16 @@ export async function continueChat(chatId: string, newMessage: Message) {
   })();
 
   return stream.value;
+}
+
+export async function completeMessage(
+  assistantMessage: Message,
+  content: string
+) {
+  await db
+    .update(messages)
+    .set({ content, status: 'DONE' })
+    .where(eq(messages.id, assistantMessage.id));
+
+  updateTag(`chat:${assistantMessage.chatId}`);
 }

@@ -58,30 +58,32 @@ function AssistantMessage({ message }: { message: Message }) {
         </div>
       </div>
     );
+  } else {
+    return <p>{provider.streamText}</p>;
   }
 
-  const stream = provider.cache.get(message.id);
+  // const stream = provider.cache.get(message.id);
 
-  if (!stream) {
-    return <p>Failed stream</p>;
-  }
+  // if (!stream) {
+  //   return <p>Failed stream</p>;
+  // }
 
-  return (
-    <Suspense
-      fallback={
-        <div className="size-[1lh] flex items-center justify-center">
-          <Spinner />
-        </div>
-      }
-    >
-      <StreamReader
-        streamPromise={stream}
-        completeAction={async (streamValue) => {
-          await completeMessage(message.id, streamValue, message.chatId);
-        }}
-      />
-    </Suspense>
-  );
+  // return (
+  //   <Suspense
+  //     fallback={
+  //       <div className="size-[1lh] flex items-center justify-center">
+  //         <Spinner />
+  //       </div>
+  //     }
+  //   >
+  //     <StreamReader
+  //       streamPromise={stream}
+  //       completeAction={async (streamValue) => {
+  //         await completeMessage(message.id, streamValue, message.chatId);
+  //       }}
+  //     />
+  //   </Suspense>
+  // );
 }
 
 function StreamReader({
@@ -96,22 +98,18 @@ function StreamReader({
   const hasStarted = useRef(false);
 
   useEffect(() => {
-    // console.log('1');
     if (hasStarted.current) return;
-    // console.log('2');
+
     hasStarted.current = true;
-    // console.log('3');
     async function f() {
-      // console.log('4');
       let message = '';
       for await (const delta of readStreamableValue(stream)) {
-        // console.log('5');
-        // console.log(delta);
+        await new Promise((resolve) => setTimeout(resolve, 500));
         message += delta;
         setResponse(message);
       }
 
-      // console.log('6');
+      console.log('6');
       await completeAction(message);
     }
 
