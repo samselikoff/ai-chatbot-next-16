@@ -5,6 +5,7 @@ import { ChatLog, ClientChat } from './_components/ChatLog';
 import { MessageBox } from './_components/MessageBox';
 import { useProvider } from './_components/Provider';
 import { createChat } from './actions';
+import { continueChat } from './chat/[id]/actions';
 
 export default function Home() {
   const provider = useProvider();
@@ -23,23 +24,13 @@ export default function Home() {
       )}
 
       <MessageBox
-        submitAction={async (message) => {
-          const chatId = window.crypto.randomUUID();
-          const clientChat: ClientChat = {
-            id: chatId,
-            messages: [
-              {
-                id: window.crypto.randomUUID(),
-                content: message,
-                role: 'user',
-                createdAt: undefined,
-              },
-            ],
-          };
-
+        createChatAction={async (clientChat) => {
           setOptimisticChat(clientChat);
 
-          provider.getCompletion(chatId, message);
+          provider.cache.set(
+            clientChat.messages[1].id,
+            continueChat(clientChat.id, clientChat.messages[0])
+          );
 
           await createChat(clientChat);
         }}

@@ -33,6 +33,7 @@ export const chats = pgTable(
 );
 
 export const messageRoleEnum = pgEnum('message_role', ['user', 'assistant']);
+export const messageStatusEnum = pgEnum('message_status', ['INIT', 'DONE']);
 export const messages = pgTable(
   'messages',
   {
@@ -43,6 +44,7 @@ export const messages = pgTable(
     content: text('content').notNull(),
     position: integer('position').notNull(),
     role: messageRoleEnum('role').notNull(),
+    status: messageStatusEnum('status').notNull(),
     ...timestamps,
   },
   (t) => {

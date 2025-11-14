@@ -1,23 +1,55 @@
 'use client';
 
 import { ArrowUpIcon } from '@heroicons/react/16/solid';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { ClientChat } from './ChatLog';
 
 export function MessageBox({
   submitAction,
+  createChatAction,
 }: {
-  submitAction: (message: string) => Promise<void>;
+  submitAction?: (message: string) => Promise<void>;
+  createChatAction?: (chat: ClientChat) => Promise<void>;
 }) {
   const [message, setMessage] = useState('');
+  const [pending, startTransition] = useTransition();
 
   return (
     <form
       action={async () => {
-        await submitAction(message);
+        startTransition(async () => {
+          const clientChatId = window.crypto.randomUUID();
+          const clientChat: ClientChat = {
+            id: clientChatId,
+            messages: [
+              {
+                id: window.crypto.randomUUID(),
+                chatId: clientChatId,
+                content: message,
+                role: 'user',
+                status: 'DONE',
+                position: 1,
+              },
+              {
+                id: window.crypto.randomUUID(),
+                chatId: clientChatId,
+                content: '',
+                role: 'assistant',
+                status: 'INIT',
+                position: 2,
+              },
+            ],
+          };
+          // await submitAction(message);
+
+          if (createChatAction) {
+            await createChatAction(clientChat);
+          }
+        });
       }}
       className="w-full mb-8"
     >
-      <div className="relative">
+      <fieldset disabled={pending} className="relative">
         <input
           name="message"
           type="text"
@@ -32,13 +64,12 @@ export function MessageBox({
         <div className="absolute right-2.5 inset-y-2.5 flex items-center justify-center">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-full w-full h-full aspect-square inline-flex items-center justify-center focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2 disabled:opacity-50"
-            disabled={message === ''}
             type="submit"
           >
             <ArrowUpIcon className="size-5" />
           </button>
         </div>
-      </div>
+      </fieldset>
     </form>
   );
 }

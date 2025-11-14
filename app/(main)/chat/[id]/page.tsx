@@ -5,35 +5,23 @@ import { MessageBox } from '../../_components/MessageBox';
 import { ChatLog } from '../../_components/ChatLog';
 import { stackServerApp } from '@/stack/server';
 import { cacheTag } from 'next/cache';
+import { Something } from './something';
 
 export const unstable_prefetch = {
   mode: 'runtime',
   samples: [{}],
 };
 
-export default async function Page(props: PageProps<'/chat/[id]'>) {
+export default async function Page({ params }: PageProps<'/chat/[id]'>) {
   return (
     <div className="h-dvh flex flex-col max-w-2xl mx-auto px-4">
-      <div className="grow">
-        <Suspense fallback="loading...">
-          <Content {...props} />
-        </Suspense>
-      </div>
-
-      <MessageBox
-        submitAction={async () => {
-          'use server';
-          //
-        }}
-      />
+      <Suspense fallback="loading...">
+        {params.then(({ id }) => (
+          <ServerChat id={id} />
+        ))}
+      </Suspense>
     </div>
   );
-}
-
-async function Content(props: PageProps<'/chat/[id]'>) {
-  const { id } = await props.params;
-
-  return <ServerChat id={id} />;
 }
 
 async function ServerChat({ id }: { id: string }) {
@@ -56,7 +44,9 @@ async function ServerChat({ id }: { id: string }) {
           role: true,
           createdAt: true,
           position: true,
+          status: true,
         },
+        orderBy: (t, { asc }) => asc(t.position),
       },
     },
     columns: {
@@ -66,7 +56,16 @@ async function ServerChat({ id }: { id: string }) {
   });
 
   if (!chat) notFound();
-  console.log(chat);
 
-  return <ChatLog chat={chat} />;
+  // console.log(chat.messages.map((m) => m.position));
+
+  return (
+    <>
+      <div className="grow">
+        <ChatLog chat={chat} />
+      </div>
+
+      <Something chatId={chat.id} />
+    </>
+  );
 }

@@ -8,6 +8,7 @@ import { streamText } from 'ai';
 import { sql } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
 import { ClientMessage } from '../ChatLog';
+import OpenAI from 'openai';
 
 export async function fetchAnswerStream(content: string) {
   const stream = createStreamableValue('');
@@ -16,6 +17,7 @@ export async function fetchAnswerStream(content: string) {
     const { textStream } = streamText({
       model: openai('gpt-3.5-turbo'),
       prompt: content,
+      // prompt: 'why is the sky blue?',
     });
     for await (const delta of textStream) {
       stream.update(delta);
@@ -27,6 +29,41 @@ export async function fetchAnswerStream(content: string) {
   return stream.value;
 }
 
+/*
+  Open AI SDK version. Blocks in dev but not prod.
+*/
+// export async function fetchAnswerStream(content: string) {
+//   const client = new OpenAI();
+
+//   const response = await client.responses.create({
+//     model: 'gpt-3.5-turbo',
+//     input: 'why is the sky blue?',
+//     stream: true,
+//   });
+
+//   return response;
+// }
+
+/*
+  Open AI API version. Also blocks in dev.
+*/
+// export async function fetchAnswerStream(content: string) {
+// const res = await fetch('https://api.openai.com/v1/responses', {
+//     method: 'post',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+//     },
+//     body: JSON.stringify({
+//       model: 'gpt-3.5-turbo',
+//       input: 'why is the sky blue?',
+//       stream: true,
+//     }),
+//   });
+
+//   return res.body;
+// }
+
 export async function saveAssistantMessage(
   chatId: string,
   unsafeData: ClientMessage
@@ -37,7 +74,7 @@ export async function saveAssistantMessage(
       id: unsafeData.id,
       chatId,
       content: unsafeData.content,
-      position: sql`COALESCE((SELECT MAX(position) FROM ${messages} WHERE ${messages.chatId} = ${chatId}), 1)`,
+      position: unsafeData.position,
       role: 'assistant',
     })
     .returning();
