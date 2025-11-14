@@ -6,7 +6,7 @@ import { MessageBox } from '../../_components/MessageBox';
 import { useProvider } from '../../_components/Provider';
 import { saveMessages } from '../../actions';
 
-export function Something({ chat }: { chat: Chat }) {
+export function Content({ chat }: { chat: Chat }) {
   const provider = useProvider();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic(
     chat.messages

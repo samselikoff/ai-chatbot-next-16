@@ -3,7 +3,8 @@ import { stackServerApp } from '@/stack/server';
 import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { Something } from './something';
+import { Content } from './content';
+import Spinner from '../../_components/Spinner';
 
 export const unstable_prefetch = {
   mode: 'runtime',
@@ -12,8 +13,14 @@ export const unstable_prefetch = {
 
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
   return (
-    <div className="h-dvh flex flex-col  px-4">
-      <Suspense fallback="loading...">
+    <div className="h-dvh flex flex-col px-4">
+      <Suspense
+        fallback={
+          <div className="mt-20 flex justify-center">
+            <Spinner />
+          </div>
+        }
+      >
         {params.then(({ id }) => (
           <ServerChat id={id} />
         ))}
@@ -55,5 +62,5 @@ async function ServerChat({ id }: { id: string }) {
 
   if (!chat) notFound();
 
-  return <Something chat={chat} />;
+  return <Content chat={chat} />;
 }
