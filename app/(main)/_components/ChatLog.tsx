@@ -19,7 +19,7 @@ export type Message = {
 export function ChatLog({ messages }: { messages: Message[] }) {
   return (
     <div className="p-4">
-      <div className="max-w-lg mx-auto mt-8 space-y-4">
+      <div className="max-w-xl mx-auto mt-8 space-y-4">
         {messages.map((message) => (
           <div key={message.id} className="flex">
             <Message message={message} />

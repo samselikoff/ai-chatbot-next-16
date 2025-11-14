@@ -14,7 +14,7 @@ export function Something({ chat }: { chat: Chat }) {
 
   return (
     <>
-      <div className="grow">
+      <div className="grow overflow-y-auto">
         <ChatLog messages={optimisticMessages} />
       </div>
 

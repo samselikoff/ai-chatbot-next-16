@@ -12,7 +12,7 @@ export const unstable_prefetch = {
 
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
   return (
-    <div className="h-dvh flex flex-col max-w-2xl mx-auto px-4">
+    <div className="h-dvh flex flex-col  px-4">
       <Suspense fallback="loading...">
         {params.then(({ id }) => (
           <ServerChat id={id} />
