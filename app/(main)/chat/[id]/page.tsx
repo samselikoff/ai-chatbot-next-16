@@ -1,10 +1,8 @@
 import { db } from '@/db';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import { MessageBox } from '../../_components/MessageBox';
-import { ChatLog } from '../../_components/ChatLog';
 import { stackServerApp } from '@/stack/server';
 import { cacheTag } from 'next/cache';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { Something } from './something';
 
 export const unstable_prefetch = {
@@ -41,8 +39,8 @@ async function ServerChat({ id }: { id: string }) {
         columns: {
           id: true,
           content: true,
+          chatId: true,
           role: true,
-          createdAt: true,
           position: true,
           status: true,
         },
@@ -57,15 +55,5 @@ async function ServerChat({ id }: { id: string }) {
 
   if (!chat) notFound();
 
-  // console.log(chat.messages.map((m) => m.position));
-
-  return (
-    <>
-      <div className="grow">
-        <ChatLog chat={chat} />
-      </div>
-
-      <Something chatId={chat.id} />
-    </>
-  );
+  return <Something chat={chat} />;
 }

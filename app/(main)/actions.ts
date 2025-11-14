@@ -3,44 +3,15 @@
 import { db } from '@/db';
 import { chats, messages } from '@/db/schema';
 import { stackServerApp } from '@/stack/server';
+import { openai } from '@ai-sdk/openai';
+import { createStreamableValue } from '@ai-sdk/rsc';
+import { streamText } from 'ai';
 import { count, eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
-import { ClientChat, ClientMessage, Message } from './_components/ChatLog';
 import { updateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { Chat, Message } from './_components/ChatLog';
 
-// export async function createChat(unsafeChatData: ClientChat) {
-//   const user = await stackServerApp.getUser();
-
-//   if (!user) {
-//     return;
-//   }
-
-//   const [existingChatCount] = await db
-//     .select({ count: count() })
-//     .from(chats)
-//     .where(eq(chats.userId, user.id));
-
-//   const [chat] = await db
-//     .insert(chats)
-//     .values({
-//       id: unsafeChatData.id,
-//       userId: user.id,
-//       title: `Chat ${existingChatCount.count + 1}`,
-//     })
-//     .returning();
-
-//   await db.insert(messages).values({
-//     id: unsafeChatData.messages[0].id,
-//     chatId: chat.id,
-//     content: unsafeChatData.messages[0].content,
-//     position: 1,
-//     role: 'user',
-//   });
-
-//   redirect(`/chat/${chat.id}`);
-// }
-
-export async function createChat(clientChat: ClientChat) {
+export async function createChat(clientChat: Chat) {
   // TODO: Validate clientChat argument
 
   const user = await stackServerApp.getUser();
@@ -79,4 +50,40 @@ export async function completeMessage(
     .where(eq(messages.id, id));
 
   updateTag(`chat:${chatId}`);
+}
+
+export async function saveMessages(newMessages: Message[]) {
+  await db.insert(messages).values(newMessages);
+
+  updateTag(`chat:${newMessages[0].chatId}`);
+}
+
+export async function continueChat(chatId: string, newMessage: Message) {
+  const existingMessages = await db.query.messages.findMany({
+    where: (t, { and, eq }) => and(eq(t.chatId, chatId), eq(t.status, 'DONE')),
+    orderBy: (t, { asc }) => asc(t.position),
+    columns: {
+      role: true,
+      content: true,
+    },
+  });
+
+  const stream = createStreamableValue('');
+
+  (async () => {
+    const { textStream } = streamText({
+      model: openai('gpt-3.5-turbo'),
+      prompt: [
+        ...existingMessages,
+        { role: 'user', content: newMessage.content },
+      ],
+    });
+    for await (const delta of textStream) {
+      stream.update(delta);
+    }
+
+    stream.done();
+  })();
+
+  return stream.value;
 }

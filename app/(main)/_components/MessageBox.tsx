@@ -2,14 +2,11 @@
 
 import { ArrowUpIcon } from '@heroicons/react/16/solid';
 import { useState, useTransition } from 'react';
-import { ClientChat } from './ChatLog';
 
 export function MessageBox({
   submitAction,
-  createChatAction,
 }: {
-  submitAction?: (message: string) => Promise<void>;
-  createChatAction?: (chat: ClientChat) => Promise<void>;
+  submitAction: (message: string) => Promise<void>;
 }) {
   const [message, setMessage] = useState('');
   const [pending, startTransition] = useTransition();
@@ -18,33 +15,7 @@ export function MessageBox({
     <form
       action={async () => {
         startTransition(async () => {
-          const clientChatId = window.crypto.randomUUID();
-          const clientChat: ClientChat = {
-            id: clientChatId,
-            messages: [
-              {
-                id: window.crypto.randomUUID(),
-                chatId: clientChatId,
-                content: message,
-                role: 'user',
-                status: 'DONE',
-                position: 1,
-              },
-              {
-                id: window.crypto.randomUUID(),
-                chatId: clientChatId,
-                content: '',
-                role: 'assistant',
-                status: 'INIT',
-                position: 2,
-              },
-            ],
-          };
-          // await submitAction(message);
-
-          if (createChatAction) {
-            await createChatAction(clientChat);
-          }
+          await submitAction(message);
         });
       }}
       className="w-full mb-8"
