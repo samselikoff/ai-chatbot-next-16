@@ -1,25 +1,44 @@
 'use client';
 
-import { useOptimistic } from 'react';
+import { Suspense, useOptimistic } from 'react';
+import { Await } from '../../_components/Await';
 import { Chat, ChatLog, Message } from '../../_components/ChatLog';
 import { MessageBox } from '../../_components/MessageBox';
 import { useProvider } from '../../_components/Provider';
 import { saveMessages } from '../../actions';
+import Spinner from '../../_components/Spinner';
 
-export function Content({ chat }: { chat: Chat }) {
+export default function Client({
+  chatPromise,
+}: {
+  chatPromise: Promise<Chat>;
+}) {
   const provider = useProvider();
-  const [optimisticMessages, setOptimisticMessages] = useOptimistic(
-    chat.messages
+  const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
+    []
   );
 
   return (
-    <>
+    <div className="h-dvh flex flex-col">
       <div className="grow overflow-y-auto">
-        <ChatLog messages={optimisticMessages} />
+        <Suspense
+          fallback={
+            <div className="pt-20 flex justify-center">
+              <Spinner />
+            </div>
+          }
+        >
+          <Await promise={chatPromise}>
+            {(chat) => (
+              <ChatLog messages={[...chat.messages, ...optimisticMessages]} />
+            )}
+          </Await>
+        </Suspense>
       </div>
 
       <MessageBox
-        submitAction={async (message) => {
+        submitAction={async (messageText) => {
+          const chat = await chatPromise;
           const lastPosition = Math.max(
             ...chat.messages.map((m) => m.position)
           );
@@ -27,7 +46,7 @@ export function Content({ chat }: { chat: Chat }) {
           const userMessage: Message = {
             id: window.crypto.randomUUID(),
             chatId: chat.id,
-            content: message,
+            content: messageText,
             role: 'user',
             position: lastPosition + 1,
             status: 'DONE',
@@ -41,17 +60,12 @@ export function Content({ chat }: { chat: Chat }) {
             status: 'INIT',
           };
 
-          setOptimisticMessages((prev) => [
-            ...prev,
-            userMessage,
-            assistantMessage,
-          ]);
-
+          setOptimisticMessages([userMessage, assistantMessage]);
           provider.getResponse(assistantMessage, userMessage);
 
           await saveMessages([userMessage, assistantMessage]);
         }}
       />
-    </>
+    </div>
   );
 }

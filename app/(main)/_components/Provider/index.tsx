@@ -49,7 +49,12 @@ export function Provider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <Context.Provider value={{ getResponse, streamingMessages }}>
+    <Context.Provider
+      value={{
+        getResponse,
+        streamingMessages,
+      }}
+    >
       {children}
     </Context.Provider>
   );

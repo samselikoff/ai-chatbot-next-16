@@ -1,20 +1,22 @@
 'use client';
 
 import { useOptimistic } from 'react';
-import { Chat, ChatLog } from './_components/ChatLog';
+import { Chat, ChatLog, Message } from './_components/ChatLog';
 import { MessageBox } from './_components/MessageBox';
 import { useProvider } from './_components/Provider';
 import { createChat } from './actions';
 
 export default function Home() {
   const provider = useProvider();
-  const [optimisticChat, setOptimisticChat] = useOptimistic<null | Chat>(null);
+  const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
+    []
+  );
 
   return (
     <div className="h-dvh flex flex-col max-w-2xl mx-auto justify-center">
-      {optimisticChat ? (
+      {optimisticMessages.length > 0 ? (
         <div className="grow">
-          <ChatLog messages={optimisticChat.messages} />
+          <ChatLog messages={optimisticMessages} />
         </div>
       ) : (
         <p className="mb-4 text-center text-3xl">How can I help?</p>
@@ -45,7 +47,7 @@ export default function Home() {
             ],
           };
 
-          setOptimisticChat(clientChat);
+          setOptimisticMessages(clientChat.messages);
 
           provider.getResponse(clientChat.messages[1], clientChat.messages[0]);
 

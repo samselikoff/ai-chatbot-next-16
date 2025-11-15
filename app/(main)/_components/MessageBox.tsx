@@ -3,12 +3,17 @@
 import { ArrowUpIcon } from '@heroicons/react/16/solid';
 import { useRef } from 'react';
 import invariant from 'tiny-invariant';
+import { useProvider } from './Provider';
+import { Chat, Message } from './ChatLog';
 
 export function MessageBox({
+  // chatPromise,
   submitAction,
 }: {
-  submitAction: (message: string) => Promise<void>;
+  // chatPromise?: Promise<Chat>;
+  submitAction: (messageText: string) => Promise<void>;
 }) {
+  // const provider = useProvider();
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
@@ -21,8 +26,46 @@ export function MessageBox({
           invariant(typeof message === 'string');
 
           if (message === '') return;
-
           formRef.current?.reset();
+
+          // let chatId: string;
+          // let newPosition: number;
+
+          // if (!chatPromise) {
+          //   // If there's no existing chat, these are the first messages.
+          //   chatId = window.crypto.randomUUID();
+          //   newPosition = 1;
+          // } else {
+          //   // If there's an existing chat, use its ID and max position.
+          //   const chat = await chatPromise;
+          //   const lastPosition = Math.max(
+          //     ...chat.messages.map((m) => m.position)
+          //   );
+          //   chatId = chat.id;
+          //   newPosition = lastPosition + 1;
+          // }
+
+          // const userMessage: Message = {
+          //   id: window.crypto.randomUUID(),
+          //   chatId,
+          //   content: message,
+          //   role: 'user',
+          //   position: newPosition,
+          //   status: 'DONE',
+          // };
+          // const assistantMessage: Message = {
+          //   id: window.crypto.randomUUID(),
+          //   chatId,
+          //   content: '',
+          //   role: 'assistant',
+          //   position: newPosition + 2,
+          //   status: 'INIT',
+          // };
+
+          // provider.setOptimisticMessages([userMessage, assistantMessage]);
+          // provider.getResponse(assistantMessage, userMessage);
+
+          // await submitAction([userMessage, assistantMessage]);
           await submitAction(message);
         }}
       >
