@@ -1,7 +1,7 @@
 'use client';
 
 import { useProvider } from '@/app/(main)/_components/Provider';
-import Spinner from './Spinner';
+import { Pulse } from './Pulse';
 
 export type Chat = { id: string; title?: string | null; messages: Message[] };
 export type Message = {
@@ -56,7 +56,7 @@ function AssistantMessage({ message }: { message: Message }) {
         <p>{content}</p>
       ) : (
         <div className="size-[1lh] flex items-center justify-center">
-          <Spinner />
+          <Pulse />
         </div>
       )}
 

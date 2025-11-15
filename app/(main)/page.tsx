@@ -11,7 +11,7 @@ export default function Home() {
   const [optimisticChat, setOptimisticChat] = useOptimistic<null | Chat>(null);
 
   return (
-    <div className="h-dvh flex flex-col max-w-2xl mx-auto px-4 justify-center">
+    <div className="h-dvh flex flex-col max-w-2xl mx-auto justify-center">
       {optimisticChat ? (
         <div className="grow">
           <ChatLog messages={optimisticChat.messages} />

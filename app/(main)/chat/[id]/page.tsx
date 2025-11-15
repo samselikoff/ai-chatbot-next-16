@@ -13,7 +13,7 @@ export const unstable_prefetch = {
 
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
   return (
-    <div className="h-dvh flex flex-col px-4">
+    <div className="h-dvh flex flex-col">
       <Suspense
         fallback={
           <div className="mt-20 flex justify-center">
