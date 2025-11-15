@@ -22,7 +22,7 @@ const Context = createContext<{
   streamingMessages: {},
 });
 
-export function Provider({ children }: { children: ReactNode }) {
+export function MessageStreams({ children }: { children: ReactNode }) {
   const [streamingMessages, setStreamingMessages] = useState<
     Partial<Record<string, string>>
   >({});
@@ -60,6 +60,6 @@ export function Provider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useProvider() {
+export function useMessageStreams() {
   return use(Context);
 }

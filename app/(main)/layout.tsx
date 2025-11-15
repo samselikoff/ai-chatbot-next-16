@@ -1,4 +1,4 @@
-import { Provider } from './_components/Provider';
+import { MessageStreams } from './_components/MessageStreams';
 import { Sidebar } from './_components/Sidebar';
 
 export default function RootLayout({
@@ -7,12 +7,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Provider>
+    <MessageStreams>
       <div className="flex w-full">
         <Sidebar />
 
         <main className="grow">{children}</main>
       </div>
-    </Provider>
+    </MessageStreams>
   );
 }

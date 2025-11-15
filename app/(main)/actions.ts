@@ -1,49 +1,13 @@
 'use server';
 
 import { db } from '@/db';
-import { chats, messages } from '@/db/schema';
-import { stackServerApp } from '@/stack/server';
+import { messages } from '@/db/schema';
 import { openai } from '@ai-sdk/openai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { streamText } from 'ai';
-import { count, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { Chat, Message } from './_components/MessageLog';
-
-export async function createChat(clientChat: Chat) {
-  // TODO: Validate clientChat argument
-
-  const user = await stackServerApp.getUser();
-
-  if (!user) {
-    return;
-  }
-
-  const [existingChatCount] = await db
-    .select({ count: count() })
-    .from(chats)
-    .where(eq(chats.userId, user.id));
-
-  await db
-    .insert(chats)
-    .values({
-      id: clientChat.id,
-      userId: user.id,
-      title: `Chat ${existingChatCount.count + 1}`,
-    })
-    .returning();
-
-  await db.insert(messages).values(clientChat.messages);
-
-  redirect(`/chat/${clientChat.id}`);
-}
-
-export async function saveMessages(newMessages: Message[]) {
-  await db.insert(messages).values(newMessages);
-
-  updateTag(`chat:${newMessages[0].chatId}`);
-}
+import { Message } from './_components/MessageLog';
 
 export async function continueChat(userMessage: Message) {
   const existingMessages = await db.query.messages.findMany({

@@ -1,13 +1,13 @@
 'use client';
 
 import { useOptimistic } from 'react';
-import { Chat, MessageLog, Message } from './_components/MessageLog';
-import { MessageComposer } from './_components/MessageComposer';
-import { useProvider } from './_components/Provider';
+import { Chat, MessageLog, Message } from '../_components/MessageLog';
+import { MessageComposer } from '../_components/MessageComposer';
+import { useMessageStreams } from '../_components/MessageStreams';
 import { createChat } from './actions';
 
 export default function Home() {
-  const provider = useProvider();
+  const provider = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     []
   );

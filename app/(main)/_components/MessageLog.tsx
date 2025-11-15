@@ -1,6 +1,6 @@
 'use client';
 
-import { useProvider } from '@/app/(main)/_components/Provider';
+import { useMessageStreams } from '@/app/(main)/_components/MessageStreams';
 import { ViewTransition } from 'react';
 import { Pulse } from './Pulse';
 
@@ -41,7 +41,11 @@ function UserMessage({ message }: { message: Message }) {
 }
 
 function AssistantMessage({ message }: { message: Message }) {
-  const provider = useProvider();
+  // useMessageStreams
+  // streamCache.createMessageStream([])
+  // streamCache.messageStreams[]
+
+  const provider = useMessageStreams();
   const content =
     message.status === 'DONE'
       ? message.content

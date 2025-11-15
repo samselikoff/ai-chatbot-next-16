@@ -4,16 +4,16 @@ import { Suspense, useOptimistic } from 'react';
 import { Await } from '../../_components/Await';
 import { Chat, MessageLog, Message } from '../../_components/MessageLog';
 import { MessageComposer } from '../../_components/MessageComposer';
-import { useProvider } from '../../_components/Provider';
-import { saveMessages } from '../../actions';
+import { useMessageStreams } from '../../_components/MessageStreams';
 import Spinner from '../../_components/Spinner';
+import { saveMessages } from './actions';
 
 export default function Client({
   chatPromise,
 }: {
   chatPromise: Promise<Chat>;
 }) {
-  const provider = useProvider();
+  const provider = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     []
   );
