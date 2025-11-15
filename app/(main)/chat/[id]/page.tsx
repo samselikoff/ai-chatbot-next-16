@@ -11,9 +11,50 @@ export const unstable_prefetch = {
   samples: [{}],
 };
 
+async function getChat(chatId: string) {
+  const user = await stackServerApp.getUser();
+
+  if (!user) {
+    return;
+  }
+
+  const chat = await db.query.chats.findFirst({
+    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, user.id)),
+    with: {
+      messages: {
+        columns: {
+          id: true,
+          content: true,
+          chatId: true,
+          role: true,
+          position: true,
+          status: true,
+        },
+        orderBy: (t, { asc }) => asc(t.position),
+      },
+    },
+    columns: {
+      id: true,
+      title: true,
+    },
+  });
+
+  if (!chat) notFound();
+}
+
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
+  const chatPromise = params.then((p) => getChat(p.id));
+
   return (
     <div className="h-dvh flex flex-col">
+      {/* <Suspense>
+        {chatPromise.then(chat => (
+          <ChatLog chat={chat} />
+        ))}
+      </Suspense>
+
+      <MessageBox /> */}
+
       <Suspense
         fallback={
           <div className="pt-20 flex justify-center">
