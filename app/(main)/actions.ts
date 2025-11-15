@@ -9,7 +9,7 @@ import { streamText } from 'ai';
 import { count, eq } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Chat, Message } from './_components/ChatLog';
+import { Chat, Message } from './_components/MessageLog';
 
 export async function createChat(clientChat: Chat) {
   // TODO: Validate clientChat argument

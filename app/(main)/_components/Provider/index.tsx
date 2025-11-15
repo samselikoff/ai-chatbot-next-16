@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { completeMessage, continueChat } from '../../actions';
-import { Message } from '../ChatLog';
+import { Message } from '../MessageLog';
 
 const Context = createContext<{
   getResponse: (

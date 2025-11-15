@@ -1,8 +1,8 @@
 'use client';
 
 import { useOptimistic } from 'react';
-import { Chat, ChatLog, Message } from './_components/ChatLog';
-import { MessageBox } from './_components/MessageBox';
+import { Chat, MessageLog, Message } from './_components/MessageLog';
+import { MessageComposer } from './_components/MessageComposer';
 import { useProvider } from './_components/Provider';
 import { createChat } from './actions';
 
@@ -16,13 +16,13 @@ export default function Home() {
     <div className="h-dvh flex flex-col max-w-2xl mx-auto justify-center">
       {optimisticMessages.length > 0 ? (
         <div className="grow">
-          <ChatLog messages={optimisticMessages} />
+          <MessageLog messages={optimisticMessages} />
         </div>
       ) : (
         <p className="mb-4 text-center text-3xl">How can I help?</p>
       )}
 
-      <MessageBox
+      <MessageComposer
         submitAction={async (input) => {
           const clientChatId = window.crypto.randomUUID();
           const clientChat: Chat = {

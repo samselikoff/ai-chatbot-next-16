@@ -2,8 +2,8 @@
 
 import { Suspense, useOptimistic } from 'react';
 import { Await } from '../../_components/Await';
-import { Chat, ChatLog, Message } from '../../_components/ChatLog';
-import { MessageBox } from '../../_components/MessageBox';
+import { Chat, MessageLog, Message } from '../../_components/MessageLog';
+import { MessageComposer } from '../../_components/MessageComposer';
 import { useProvider } from '../../_components/Provider';
 import { saveMessages } from '../../actions';
 import Spinner from '../../_components/Spinner';
@@ -30,13 +30,15 @@ export default function Client({
         >
           <Await promise={chatPromise}>
             {(chat) => (
-              <ChatLog messages={[...chat.messages, ...optimisticMessages]} />
+              <MessageLog
+                messages={[...chat.messages, ...optimisticMessages]}
+              />
             )}
           </Await>
         </Suspense>
       </div>
 
-      <MessageBox
+      <MessageComposer
         submitAction={async (messageText) => {
           const chat = await chatPromise;
           const lastPosition = Math.max(
