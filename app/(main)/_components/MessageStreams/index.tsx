@@ -1,46 +1,42 @@
 'use client';
 
 import { readStreamableValue } from '@ai-sdk/rsc';
-import {
-  createContext,
-  ReactNode,
-  startTransition,
-  use,
-  useState,
-} from 'react';
-import { completeMessage, continueChat } from '../../actions';
+import { createContext, ReactNode, startTransition, useState } from 'react';
+import { completeMessage, continueChat } from './actions';
 import { Message } from '../MessageLog';
 
-const Context = createContext<{
-  getResponse: (
-    assistantMessage: Message,
-    userMessage: Message
+export const Context = createContext<{
+  createMessageStream: (
+    messages: [userMessage: Message, assistantMessage: Message]
   ) => Promise<void>;
-  streamingMessages: Partial<Record<string, string>>;
+  messageStreams: Partial<Record<string, string>>;
 }>({
-  getResponse: async () => {},
-  streamingMessages: {},
+  createMessageStream: async () => {},
+  messageStreams: {},
 });
 
 export function MessageStreams({ children }: { children: ReactNode }) {
-  const [streamingMessages, setStreamingMessages] = useState<
+  const [messageStreams, setMessageStreams] = useState<
     Partial<Record<string, string>>
   >({});
 
-  async function getResponse(assistantMessage: Message, userMessage: Message) {
+  async function createMessageStream([userMessage, assistantMessage]: [
+    userMessage: Message,
+    assistantMessage: Message
+  ]) {
     const stream = await continueChat(userMessage);
 
     let response = '';
     for await (const delta of readStreamableValue(stream)) {
       response += delta;
-      setStreamingMessages((prev) => ({
+      setMessageStreams((prev) => ({
         ...prev,
         [assistantMessage.id]: response,
       }));
     }
 
     startTransition(async () => {
-      setStreamingMessages((prev) => ({
+      setMessageStreams((prev) => ({
         ...prev,
         [assistantMessage.id]: '',
       }));
@@ -51,15 +47,11 @@ export function MessageStreams({ children }: { children: ReactNode }) {
   return (
     <Context.Provider
       value={{
-        getResponse,
-        streamingMessages,
+        createMessageStream,
+        messageStreams,
       }}
     >
       {children}
     </Context.Provider>
   );
-}
-
-export function useMessageStreams() {
-  return use(Context);
 }

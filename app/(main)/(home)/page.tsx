@@ -3,11 +3,11 @@
 import { useOptimistic } from 'react';
 import { Chat, MessageLog, Message } from '../_components/MessageLog';
 import { MessageComposer } from '../_components/MessageComposer';
-import { useMessageStreams } from '../_components/MessageStreams';
+import { useMessageStreams } from '../_components/MessageStreams/use-message-streams';
 import { createChat } from './actions';
 
 export default function Home() {
-  const provider = useMessageStreams();
+  const { createMessageStream } = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     []
   );
@@ -25,31 +25,31 @@ export default function Home() {
       <MessageComposer
         submitAction={async (input) => {
           const clientChatId = window.crypto.randomUUID();
+          const messages: [Message, Message] = [
+            {
+              id: window.crypto.randomUUID(),
+              chatId: clientChatId,
+              content: input,
+              role: 'user',
+              status: 'DONE',
+              position: 1,
+            },
+            {
+              id: window.crypto.randomUUID(),
+              chatId: clientChatId,
+              content: '',
+              role: 'assistant',
+              status: 'INIT',
+              position: 2,
+            },
+          ];
           const clientChat: Chat = {
             id: clientChatId,
-            messages: [
-              {
-                id: window.crypto.randomUUID(),
-                chatId: clientChatId,
-                content: input,
-                role: 'user',
-                status: 'DONE',
-                position: 1,
-              },
-              {
-                id: window.crypto.randomUUID(),
-                chatId: clientChatId,
-                content: '',
-                role: 'assistant',
-                status: 'INIT',
-                position: 2,
-              },
-            ],
+            messages,
           };
 
-          setOptimisticMessages(clientChat.messages);
-
-          provider.getResponse(clientChat.messages[1], clientChat.messages[0]);
+          setOptimisticMessages(messages);
+          createMessageStream(messages);
 
           await createChat(clientChat);
         }}

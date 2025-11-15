@@ -7,7 +7,7 @@ import { createStreamableValue } from '@ai-sdk/rsc';
 import { streamText } from 'ai';
 import { eq } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
-import { Message } from './_components/MessageLog';
+import { Message } from '../MessageLog';
 
 export async function continueChat(userMessage: Message) {
   const existingMessages = await db.query.messages.findMany({

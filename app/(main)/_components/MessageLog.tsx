@@ -1,6 +1,6 @@
 'use client';
 
-import { useMessageStreams } from '@/app/(main)/_components/MessageStreams';
+import { useMessageStreams } from './MessageStreams/use-message-streams';
 import { ViewTransition } from 'react';
 import { Pulse } from './Pulse';
 
@@ -41,15 +41,10 @@ function UserMessage({ message }: { message: Message }) {
 }
 
 function AssistantMessage({ message }: { message: Message }) {
-  // useMessageStreams
-  // streamCache.createMessageStream([])
-  // streamCache.messageStreams[]
+  const { messageStreams } = useMessageStreams();
 
-  const provider = useMessageStreams();
   const content =
-    message.status === 'DONE'
-      ? message.content
-      : provider.streamingMessages[message.id];
+    message.status === 'DONE' ? message.content : messageStreams[message.id];
 
   return (
     <div>

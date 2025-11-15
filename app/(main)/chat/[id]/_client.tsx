@@ -4,7 +4,7 @@ import { Suspense, useOptimistic } from 'react';
 import { Await } from '../../_components/Await';
 import { Chat, MessageLog, Message } from '../../_components/MessageLog';
 import { MessageComposer } from '../../_components/MessageComposer';
-import { useMessageStreams } from '../../_components/MessageStreams';
+import { useMessageStreams } from '../../_components/MessageStreams/use-message-streams';
 import Spinner from '../../_components/Spinner';
 import { saveMessages } from './actions';
 
@@ -13,7 +13,7 @@ export default function Client({
 }: {
   chatPromise: Promise<Chat>;
 }) {
-  const provider = useMessageStreams();
+  const { createMessageStream } = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     []
   );
@@ -45,27 +45,29 @@ export default function Client({
             ...chat.messages.map((m) => m.position)
           );
 
-          const userMessage: Message = {
-            id: window.crypto.randomUUID(),
-            chatId: chat.id,
-            content: messageText,
-            role: 'user',
-            position: lastPosition + 1,
-            status: 'DONE',
-          };
-          const assistantMessage: Message = {
-            id: window.crypto.randomUUID(),
-            chatId: chat.id,
-            content: '',
-            role: 'assistant',
-            position: lastPosition + 2,
-            status: 'INIT',
-          };
+          const messages: [Message, Message] = [
+            {
+              id: window.crypto.randomUUID(),
+              chatId: chat.id,
+              content: messageText,
+              role: 'user',
+              position: lastPosition + 1,
+              status: 'DONE',
+            },
+            {
+              id: window.crypto.randomUUID(),
+              chatId: chat.id,
+              content: '',
+              role: 'assistant',
+              position: lastPosition + 2,
+              status: 'INIT',
+            },
+          ];
 
-          setOptimisticMessages([userMessage, assistantMessage]);
-          provider.getResponse(assistantMessage, userMessage);
+          setOptimisticMessages(messages);
+          createMessageStream(messages);
 
-          await saveMessages([userMessage, assistantMessage]);
+          await saveMessages(messages);
         }}
       />
     </div>
