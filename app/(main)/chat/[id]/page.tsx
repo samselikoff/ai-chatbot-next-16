@@ -2,6 +2,7 @@ import { db } from '@/db';
 import { stackServerApp } from '@/stack/server';
 import { notFound } from 'next/navigation';
 import Client from './_client';
+import { cacheTag } from 'next/cache';
 
 export const unstable_prefetch = {
   mode: 'runtime',
@@ -15,6 +16,9 @@ export default async function Page({ params }: PageProps<'/chat/[id]'>) {
 }
 
 async function getChat(chatId: string) {
+  'use cache: private';
+  cacheTag(`chat:${chatId}`);
+
   const user = await stackServerApp.getUser();
 
   if (!user) {
