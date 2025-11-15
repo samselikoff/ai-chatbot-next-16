@@ -1,11 +1,11 @@
 import { db } from '@/db';
+import { getCurrentUser } from '@/lib/current-user';
 import { stackServerApp } from '@/stack/server';
 import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { ChatLink } from './ChatLink';
-import { getCurrentUser } from '@/lib/current-user';
 
 export async function Sidebar() {
   return (
@@ -27,7 +27,6 @@ export async function Sidebar() {
         <div className="flex flex-col overflow-y-auto grow py-2">
           <Chats />
         </div>
-
         <div className="flex flex-col shrink-0">
           <UserInfo />
         </div>

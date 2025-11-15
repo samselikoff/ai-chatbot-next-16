@@ -2,6 +2,7 @@
 
 import { useProvider } from '@/app/(main)/_components/Provider';
 import { Pulse } from './Pulse';
+import { ViewTransition } from 'react';
 
 export type Chat = { id: string; title?: string | null; messages: Message[] };
 export type Message = {
@@ -61,9 +62,11 @@ function AssistantMessage({ message }: { message: Message }) {
       )}
 
       {message.status === 'DONE' && (
-        <div className="flex mt-2">
-          <span className="text-sm text-gray-500">Saved</span>
-        </div>
+        <ViewTransition>
+          <div className="flex mt-2">
+            <span className="text-sm text-gray-500">Saved</span>
+          </div>
+        </ViewTransition>
       )}
     </div>
   );

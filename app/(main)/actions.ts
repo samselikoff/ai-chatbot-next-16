@@ -59,7 +59,8 @@ export async function continueChat(userMessage: Message) {
 
   (async () => {
     const { textStream } = streamText({
-      model: openai('gpt-5'),
+      // model: openai('gpt-5'),
+      model: openai('gpt-3.5-turbo'),
       prompt: [
         ...existingMessages,
         { role: 'user', content: userMessage.content },

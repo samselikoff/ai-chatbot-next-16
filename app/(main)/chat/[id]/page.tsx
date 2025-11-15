@@ -3,8 +3,8 @@ import { stackServerApp } from '@/stack/server';
 import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { Content } from './content';
 import Spinner from '../../_components/Spinner';
+import { Content } from './content';
 
 export const unstable_prefetch = {
   mode: 'runtime',
@@ -16,7 +16,7 @@ export default async function Page({ params }: PageProps<'/chat/[id]'>) {
     <div className="h-dvh flex flex-col">
       <Suspense
         fallback={
-          <div className="mt-20 flex justify-center">
+          <div className="pt-20 flex justify-center">
             <Spinner />
           </div>
         }
