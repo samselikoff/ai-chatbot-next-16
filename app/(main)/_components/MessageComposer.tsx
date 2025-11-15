@@ -40,7 +40,6 @@ export function MessageComposer({
             <button
               className="bg-gray-800 enabled:hover:bg-gray-700 text-white font-medium rounded-full w-full h-full aspect-square inline-flex items-center justify-center focus-visible:outline-2 focus-visible:outline-gray-500 focus-visible:outline-offset-2 group-[:has(input:invalid)]:opacity-50 disabled:opacity-50"
               type="submit"
-              // disabled={disabled}
             >
               <ArrowUpIcon className="size-5" />
             </button>
