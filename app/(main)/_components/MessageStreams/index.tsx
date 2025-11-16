@@ -1,9 +1,8 @@
 'use client';
 
-import { readStreamableValue } from '@ai-sdk/rsc';
 import { createContext, ReactNode, startTransition, useState } from 'react';
-import { completeMessage, continueChat } from './actions';
 import { Message } from '../MessageLog';
+import { completeMessage, continueChat } from './actions';
 
 export const Context = createContext<{
   createMessageStream: (
@@ -27,12 +26,14 @@ export function MessageStreams({ children }: { children: ReactNode }) {
     const stream = await continueChat(userMessage);
 
     let response = '';
-    for await (const delta of readStreamableValue(stream)) {
-      response += delta;
-      setMessageStreams((prev) => ({
-        ...prev,
-        [assistantMessage.id]: response,
-      }));
+    for await (const chunk of stream) {
+      if (chunk.type === 'response.output_text.delta') {
+        response += chunk.delta;
+        setMessageStreams((prev) => ({
+          ...prev,
+          [assistantMessage.id]: response,
+        }));
+      }
     }
 
     startTransition(async () => {

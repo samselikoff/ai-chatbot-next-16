@@ -2,11 +2,9 @@
 
 import { db } from '@/db';
 import { messages } from '@/db/schema';
-import { openai } from '@ai-sdk/openai';
-import { createStreamableValue } from '@ai-sdk/rsc';
-import { streamText } from 'ai';
 import { eq } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
+import OpenAI from 'openai';
 import { Message } from '../MessageLog';
 
 export async function continueChat(userMessage: Message) {
@@ -19,25 +17,18 @@ export async function continueChat(userMessage: Message) {
     },
   });
 
-  const stream = createStreamableValue('');
+  const client = new OpenAI();
 
-  (async () => {
-    const { textStream } = streamText({
-      // model: openai('gpt-5'),
-      model: openai('gpt-3.5-turbo'),
-      prompt: [
-        ...existingMessages,
-        { role: 'user', content: userMessage.content },
-      ],
-    });
-    for await (const delta of textStream) {
-      stream.update(delta);
-    }
+  const response = await client.responses.create({
+    model: 'gpt-3.5-turbo',
+    input: [
+      ...existingMessages,
+      { role: 'user', content: userMessage.content },
+    ],
+    stream: true,
+  });
 
-    stream.done();
-  })();
-
-  return stream.value;
+  return response;
 }
 
 export async function completeMessage(
