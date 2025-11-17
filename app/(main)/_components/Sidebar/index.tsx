@@ -5,9 +5,8 @@ import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import Link from 'next/link';
 import { Suspense, ViewTransition } from 'react';
-import { Pulse } from '../Pulse';
-import { ChatLink } from './ChatLink';
 import { Dots } from '../Dots';
+import { ChatLink } from './ChatLink';
 
 export async function Sidebar() {
   return (
