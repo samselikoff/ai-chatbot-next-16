@@ -6,6 +6,9 @@ rich client pages powered directly by the server
 
 # Demos
 
+- [ ] 1: PPR
+- [ ] 2: AI streams
+
 - Optimistic
 - Activity keeps draft messages
 - ViewTransition for Suspense, Saved message
