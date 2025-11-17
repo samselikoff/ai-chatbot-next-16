@@ -1,5 +1,7 @@
 # Intro
 
+frontend-as-coordinator vs. backend-as-coordinator
+
 # Demos
 
 - Optimistic

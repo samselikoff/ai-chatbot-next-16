@@ -20,16 +20,13 @@ export async function continueChat(userMessage: Message) {
   const client = new OpenAI();
 
   const response = await client.responses.create({
-    // model: 'gpt-3.5-turbo',
-    model: 'gpt-5',
+    model: 'gpt-3.5-turbo',
     input: [
       ...existingMessages,
       { role: 'user', content: userMessage.content },
     ],
     stream: true,
   });
-
-  // await new Promise((resolve) => setTimeout(resolve, 1_000));
 
   return response;
 }
@@ -42,8 +39,6 @@ export async function completeMessage(
     .update(messages)
     .set({ content, status: 'DONE' })
     .where(eq(messages.id, assistantMessage.id));
-
-  // console.log('COMPLETING MESSAGE');
 
   // updateTag(`chat:${assistantMessage.chatId}`);
   refresh();

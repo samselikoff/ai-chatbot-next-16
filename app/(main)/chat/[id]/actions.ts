@@ -9,6 +9,5 @@ export async function saveMessages(newMessages: Message[]) {
   await db.insert(messages).values(newMessages);
 
   // updateTag(`chat:${newMessages[0].chatId}`);
-  // console.log('SAVING MESSAGES');
   refresh();
 }

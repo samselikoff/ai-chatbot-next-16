@@ -1,8 +1,7 @@
 import { db } from '@/db';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { notFound } from 'next/navigation';
 import Client from './_client';
-import { cacheTag } from 'next/cache';
-import { getCurrentUser } from '@/lib/get-current-user';
 
 // export const unstable_prefetch = {
 //   mode: 'runtime',

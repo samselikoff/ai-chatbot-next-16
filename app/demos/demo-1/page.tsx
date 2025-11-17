@@ -1,10 +1,13 @@
 import { db } from '@/db';
 import { getCurrentUser } from '@/lib/get-current-user';
+import { Suspense } from 'react';
 
 export default function Page() {
   return (
     <div className="flex">
-      <Sidebar />
+      <Suspense>
+        <Sidebar />
+      </Suspense>
 
       <main className="grow flex justify-center">
         <h1 className="text-lg mt-20">What can I help you with today?</h1>
