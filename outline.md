@@ -2,6 +2,8 @@
 
 frontend-as-coordinator vs. backend-as-coordinator
 
+rich client pages powered directly by the server
+
 # Demos
 
 - Optimistic
