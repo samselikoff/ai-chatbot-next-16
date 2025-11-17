@@ -32,8 +32,8 @@ export function Dots() {
     const offset = Date.now() % DURATION;
 
     el1.getAnimations()[0].currentTime = offset;
-    el2.getAnimations()[0].currentTime = offset - DURATION * (1 / 8);
-    el3.getAnimations()[0].currentTime = offset - DURATION * (2 / 8);
+    el2.getAnimations()[0].currentTime = offset - DURATION * (1 / 5);
+    el3.getAnimations()[0].currentTime = offset - DURATION * (2 / 5);
   }, []);
 
   return (

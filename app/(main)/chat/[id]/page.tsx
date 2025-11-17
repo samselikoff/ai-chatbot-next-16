@@ -4,10 +4,10 @@ import Client from './_client';
 import { cacheTag } from 'next/cache';
 import { getCurrentUser } from '@/lib/get-current-user';
 
-export const unstable_prefetch = {
-  mode: 'runtime',
-  samples: [{}],
-};
+// export const unstable_prefetch = {
+//   mode: 'runtime',
+//   samples: [{}],
+// };
 
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
   const chatPromise = params.then((p) => getChat(p.id));
@@ -16,8 +16,8 @@ export default async function Page({ params }: PageProps<'/chat/[id]'>) {
 }
 
 async function getChat(chatId: string) {
-  'use cache: private';
-  cacheTag(`chat:${chatId}`);
+  // 'use cache: private';
+  // cacheTag(`chat:${chatId}`);
 
   const user = await getCurrentUser();
 

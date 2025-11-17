@@ -3,7 +3,7 @@
 import { db } from '@/db';
 import { messages } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { updateTag } from 'next/cache';
+import { refresh, updateTag } from 'next/cache';
 import OpenAI from 'openai';
 import { Message } from '../MessageLog';
 
@@ -28,6 +28,8 @@ export async function continueChat(userMessage: Message) {
     stream: true,
   });
 
+  // await new Promise((resolve) => setTimeout(resolve, 1_000));
+
   return response;
 }
 
@@ -40,5 +42,8 @@ export async function completeMessage(
     .set({ content, status: 'DONE' })
     .where(eq(messages.id, assistantMessage.id));
 
-  updateTag(`chat:${assistantMessage.chatId}`);
+  // console.log('COMPLETING MESSAGE');
+
+  // updateTag(`chat:${assistantMessage.chatId}`);
+  refresh();
 }
