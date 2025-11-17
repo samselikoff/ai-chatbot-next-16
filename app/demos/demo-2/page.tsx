@@ -1,21 +1,21 @@
 export default async function Page() {
   return (
-    <div className="flex">
-      <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col">
-        <div className="border-b border-gray-300 flex flex-col">
-          <p className="mx-5 my-3 text-sm font-semibold text-gray-700">
-            Next 16 Chatbot
-          </p>
-        </div>
+    <main className="grow flex flex-col justify-center max-w-xl mx-auto">
+      <h1 className="text-lg mt-20 text-center">
+        What can I help you with today?
+      </h1>
 
-        <div className="flex flex-col overflow-y-auto grow py-2">
-          {/* Show chats */}
-        </div>
-      </nav>
-
-      <main className="grow flex justify-center">
-        <h1 className="text-lg mt-20">What can I help you with today?</h1>
-      </main>
-    </div>
+      <div className="mt-8">
+        <form action="">
+          <input
+            name="message"
+            type="text"
+            placeholder="Ask anything"
+            className="border-[0.5px] shadow-md shadow-black/5 py-4 px-6 rounded-full block w-full focus:outline-none border-black/25"
+            autoFocus
+          />
+        </form>
+      </div>
+    </main>
   );
 }
