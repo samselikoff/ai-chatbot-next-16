@@ -2,7 +2,7 @@
 
 ## TODO
 
-- [ ] Remove auth for demo. Local db.
+- [x] Remove auth for demo. Local db.
 - [ ] In-progress indicator on sidebar?
 - [ ] Autogenerate chat title name
 - [ ] Delete chats

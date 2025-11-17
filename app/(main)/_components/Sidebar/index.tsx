@@ -1,9 +1,7 @@
 import { db } from '@/db';
-import { getCurrentUser } from '@/lib/current-user';
-import { stackServerApp } from '@/stack/server';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { ChatLink } from './ChatLink';
 
@@ -73,9 +71,8 @@ async function UserInfo() {
         <form
           action={async () => {
             'use server';
-            const user = await stackServerApp.getUser();
-            await user?.signOut();
-            redirect('/handler/sign-up');
+            const currentUser = await getCurrentUser();
+            await currentUser.signOut();
           }}
         >
           <button
