@@ -1,6 +1,5 @@
-- Add chats to sidebar
-- Add loading.tsx
-- Show Suspense devtools to design
-- Remove loading.tsx, extract ChatList, wrap in Suspense
-- ViewTransition
-- Explain PPR
+- Add action
+- Return stream directly
+- Mention RSC serialization protocol
+- Show Firefox devtools, lots of data over wire
+- Use generator to trim text

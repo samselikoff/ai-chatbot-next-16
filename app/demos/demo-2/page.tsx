@@ -1,4 +1,12 @@
-export default async function Page() {
+'use client';
+
+import { useRef, useState } from 'react';
+import { getStream } from './actions';
+
+export default function Page() {
+  const [response, setResponse] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <main className="grow flex flex-col justify-center max-w-xl mx-auto">
       <h1 className="text-lg mt-20 text-center">
@@ -6,7 +14,22 @@ export default async function Page() {
       </h1>
 
       <div className="mt-8">
-        <form action="">
+        <form
+          action={async (formData) => {
+            const message = formData.get('message');
+            if (typeof message !== 'string') return;
+
+            formRef.current?.reset();
+
+            const stream = await getStream(message);
+
+            setResponse('');
+            for await (const delta of stream) {
+              setResponse((curr) => curr + delta);
+            }
+          }}
+          ref={formRef}
+        >
           <input
             name="message"
             type="text"
@@ -16,6 +39,12 @@ export default async function Page() {
           />
         </form>
       </div>
+
+      {response && (
+        <div className="mt-8">
+          <p>{response}</p>
+        </div>
+      )}
     </main>
   );
 }
