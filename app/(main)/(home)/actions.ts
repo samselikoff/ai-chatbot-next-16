@@ -2,10 +2,10 @@
 
 import { db } from '@/db';
 import { chats, messages } from '@/db/schema';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { count, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { Chat } from '../_components/MessageLog';
-import { getCurrentUser } from '@/lib/get-current-user';
 
 export async function createChat(clientChat: Chat) {
   const user = await getCurrentUser();

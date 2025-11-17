@@ -3,7 +3,7 @@
 ## TODO
 
 - [x] Remove auth for demo. Local db.
-- [ ] In-progress indicator on sidebar?
 - [ ] Autogenerate chat title name
+- [ ] In-progress indicator on sidebar
 - [ ] Delete chats
 - [ ] Try Redis stream?
