@@ -8,7 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <MessageStreams>
-      <div className="flex w-full">
+      <div className="flex">
         <Sidebar />
 
         <main className="grow">{children}</main>

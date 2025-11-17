@@ -20,7 +20,8 @@ export async function continueChat(userMessage: Message) {
   const client = new OpenAI();
 
   const response = await client.responses.create({
-    model: 'gpt-3.5-turbo',
+    // model: 'gpt-3.5-turbo',
+    model: 'gpt-5',
     input: [
       ...existingMessages,
       { role: 'user', content: userMessage.content },

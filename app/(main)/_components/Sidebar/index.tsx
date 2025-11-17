@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/get-current-user';
 import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import Link from 'next/link';
-import { Suspense, ViewTransition } from 'react';
+import { Suspense } from 'react';
 import { Dots } from '../Dots';
 import { ChatLink } from './ChatLink';
 
@@ -67,11 +67,9 @@ async function Chats() {
           {chat.title}
 
           {chat.isStreaming && (
-            <ViewTransition>
-              <span className="ml-auto">
-                <Dots />
-              </span>
-            </ViewTransition>
+            <span className="ml-auto">
+              <Dots />
+            </span>
           )}
         </ChatLink>
       ))}
