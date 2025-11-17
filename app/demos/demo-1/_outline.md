@@ -1,0 +1,3 @@
+- Add chats to sidebar
+- Add loading.tsx
+- Show Suspense devtools to design
