@@ -13,6 +13,7 @@ export default function Page() {
             placeholder="Ask anything"
             className="border-[0.5px] shadow-md shadow-black/5 py-4 px-6 rounded-full block w-full focus:outline-none border-black/25"
             autoFocus
+            required
           />
         </form>
       </div>

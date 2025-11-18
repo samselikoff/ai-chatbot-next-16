@@ -1,7 +1,6 @@
 'use client';
 
-import { Await } from '@/app/(main)/_components/Await';
-import { Suspense, useOptimistic, useRef } from 'react';
+import { Suspense, use, useOptimistic, useRef } from 'react';
 import { DemoMessage, saveMessages } from './actions';
 
 export default function Client({
@@ -9,10 +8,10 @@ export default function Client({
 }: {
   messagesPromise: Promise<DemoMessage[]>;
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<
     DemoMessage[]
   >([]);
-  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <main className="grow flex flex-col justify-center max-w-xl mx-auto">
@@ -42,8 +41,8 @@ export default function Client({
               status: 'DONE',
             };
 
-            setOptimisticMessages((current) => [
-              ...current,
+            setOptimisticMessages((prev) => [
+              ...prev,
               userMessage,
               assistantMessage,
             ]);
@@ -65,27 +64,33 @@ export default function Client({
             required
           />
         </form>
-      </div>
 
-      <div className="mt-8">
         <Suspense>
-          <Await promise={messagesPromise}>
-            {(messages) => (
-              <MessageLog messages={[...messages, ...optimisticMessages]} />
-            )}
-          </Await>
+          <MessageLog
+            messagesPromise={messagesPromise}
+            optimisticMessages={optimisticMessages}
+          />
         </Suspense>
       </div>
     </main>
   );
 }
 
-function MessageLog({ messages }: { messages: DemoMessage[] }) {
+function MessageLog({
+  messagesPromise,
+  optimisticMessages,
+}: {
+  messagesPromise: Promise<DemoMessage[]>;
+  optimisticMessages: DemoMessage[];
+}) {
+  const messages = use(messagesPromise);
+  const allMessages = [...messages, ...optimisticMessages];
+
   return (
-    <>
-      {messages.map((message) => (
-        <div key={message.id}>{message.content}</div>
+    <div className="mt-8">
+      {allMessages.map((message) => (
+        <p key={message.id}>{message.content}</p>
       ))}
-    </>
+    </div>
   );
 }
