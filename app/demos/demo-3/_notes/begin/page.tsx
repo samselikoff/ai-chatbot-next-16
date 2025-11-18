@@ -1,4 +1,10 @@
-export default function Page() {
+'use client';
+
+import { useRef } from 'react';
+
+export default function Client() {
+  const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <main className="grow flex flex-col justify-center max-w-xl mx-auto">
       <h1 className="text-lg mt-20 text-center">
@@ -6,7 +12,31 @@ export default function Page() {
       </h1>
 
       <div className="mt-8">
-        <form>
+        <form
+          action={async (formData) => {
+            const message = formData.get('message');
+            if (typeof message !== 'string') return;
+
+            formRef.current?.reset();
+
+            // const userMessage: DemoMessage = {
+            //   id: window.crypto.randomUUID(),
+            //   content: message,
+            //   role: 'user',
+            //   status: 'DONE',
+            // };
+
+            // const assistantMessage: DemoMessage = {
+            //   id: window.crypto.randomUUID(),
+            //   content: '[assistant response here]',
+            //   role: 'assistant',
+            //   status: 'DONE',
+            // };
+
+            // TODO: Persist messages
+          }}
+          ref={formRef}
+        >
           <input
             name="message"
             type="text"
