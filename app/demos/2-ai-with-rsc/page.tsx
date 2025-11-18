@@ -1,6 +1,11 @@
 'use client';
 
+import { useState } from 'react';
+import { getStream } from './actions';
+
 export default function Page() {
+  const [response, setResponse] = useState('');
+
   return (
     <main className="grow flex flex-col justify-center max-w-xl mx-auto">
       <h1 className="text-lg mt-20 text-center">
@@ -13,8 +18,11 @@ export default function Page() {
             const message = formData.get('message');
             if (typeof message !== 'string') return;
 
-            // TODO: Get stream
-            console.log(message);
+            const stream = await getStream(message);
+
+            for await (const chunk of stream) {
+              setResponse((curr) => curr + chunk);
+            }
           }}
         >
           <input
@@ -27,6 +35,8 @@ export default function Page() {
           />
         </form>
       </div>
+
+      <div className="mt-8">{response}</div>
     </main>
   );
 }

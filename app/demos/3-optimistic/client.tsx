@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useOptimistic, useRef } from 'react';
 import { DemoMessage, saveMessages } from './actions';
 
 export default function Client({ messages }: { messages: DemoMessage[] }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const [optimisticMessages, setOptimisticMessages] = useOptimistic(messages);
 
   return (
     <main className="grow flex flex-col justify-center max-w-xl mx-auto">
@@ -35,7 +36,17 @@ export default function Client({ messages }: { messages: DemoMessage[] }) {
             };
 
             // TODO: Persist messages
-            await saveMessages([userMessage, assistantMessage]);
+            setOptimisticMessages((curr) => [
+              ...curr,
+              userMessage,
+              assistantMessage,
+            ]);
+
+            try {
+              await saveMessages([userMessage, assistantMessage]);
+            } catch (error) {
+              //
+            }
           }}
           ref={formRef}
         >
@@ -51,7 +62,7 @@ export default function Client({ messages }: { messages: DemoMessage[] }) {
       </div>
 
       <div className="mt-8">
-        {messages.map((message) => (
+        {optimisticMessages.map((message) => (
           <p key={message.id}>{message.content}</p>
         ))}
       </div>

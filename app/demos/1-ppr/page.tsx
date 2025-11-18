@@ -1,3 +1,6 @@
+import { db } from '@/db';
+import { Suspense } from 'react';
+
 export default async function Page() {
   return (
     <div className="flex">
@@ -9,7 +12,9 @@ export default async function Page() {
         </div>
 
         <div className="flex flex-col overflow-y-auto grow py-2">
-          {/* TODO: Show chats */}
+          <Suspense>
+            <ChatList />
+          </Suspense>
         </div>
       </nav>
 
@@ -18,4 +23,15 @@ export default async function Page() {
       </main>
     </div>
   );
+}
+
+async function ChatList() {
+  await new Promise((resolve) => setTimeout(resolve, 1_000));
+  const chats = await db.query.chats.findMany();
+
+  return chats.map((chat) => (
+    <p className="text-sm px-5 py-2" key={chat.id}>
+      {chat.title}
+    </p>
+  ));
 }

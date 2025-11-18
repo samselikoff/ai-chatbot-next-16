@@ -1,5 +1,9 @@
 'use server';
 
+import { db } from '@/db';
+import { demoMessages } from '@/db/schema';
+import { refresh } from 'next/cache';
+
 export type DemoMessage = {
   id: string;
   content: string;
@@ -8,6 +12,10 @@ export type DemoMessage = {
 };
 
 export async function saveMessages(messages: DemoMessage[]) {
-  // TODO: Save messages
-  console.log(messages);
+  await new Promise((resolve) => setTimeout(resolve, 1_000));
+
+  throw new Error('💥');
+  await db.insert(demoMessages).values(messages);
+
+  refresh();
 }

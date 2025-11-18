@@ -3,10 +3,10 @@ import { getCurrentUser } from '@/lib/get-current-user';
 import { notFound } from 'next/navigation';
 import Client from './client';
 
-// export const unstable_prefetch = {
-//   mode: 'runtime',
-//   samples: [{}],
-// };
+export const unstable_prefetch = {
+  mode: 'runtime',
+  samples: [{}],
+};
 
 export default async function Page(props: PageProps<'/chat/[id]'>) {
   const chatPromise = verifyUserAndGetChat(props);
@@ -22,8 +22,10 @@ async function verifyUserAndGetChat(props: PageProps<'/chat/[id]'>) {
 }
 
 async function getChat(chatId: string, userId: string) {
+  'use cache';
+
   // Simulate delay
-  // await new Promise((resolve) => setTimeout(resolve, 250));
+  await new Promise((resolve) => setTimeout(resolve, 250));
 
   const chat = await db.query.chats.findFirst({
     where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
