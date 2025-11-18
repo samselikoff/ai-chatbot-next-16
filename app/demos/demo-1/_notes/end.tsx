@@ -5,7 +5,7 @@ import { Suspense, ViewTransition } from 'react';
 export default async function Page() {
   return (
     <div className="flex">
-      <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col">
+      <nav className="w-40 shrink-0 h-dvh bg-gray-100 flex flex-col">
         <div className="border-b border-gray-300 flex flex-col">
           <p className="mx-5 my-3 text-sm font-semibold text-gray-700">
             Next 16 Chatbot

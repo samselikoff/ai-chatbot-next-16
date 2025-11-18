@@ -10,7 +10,7 @@ import { ChatLink } from './ChatLink';
 
 export async function Sidebar() {
   return (
-    <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col">
+    <nav className="w-40 shrink-0 h-dvh bg-gray-100 flex flex-col">
       <div className="border-b border-gray-300 flex flex-col">
         <p className="mx-5 mt-3 text-sm font-semibold text-gray-700">
           Next 16 Chatbot
