@@ -2,11 +2,11 @@
 
 import { db } from '@/db';
 import { messages } from '@/db/schema';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { eq } from 'drizzle-orm';
-import { refresh, updateTag } from 'next/cache';
+import { refresh } from 'next/cache';
 import OpenAI from 'openai';
 import { Message } from '../MessageLog';
-import { getCurrentUser } from '@/lib/get-current-user';
 
 export async function continueChat(userMessage: Message) {
   await getCurrentUser();
