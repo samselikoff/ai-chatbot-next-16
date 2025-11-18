@@ -9,4 +9,5 @@ export type DemoMessage = {
 
 export async function saveMessages(messages: DemoMessage[]) {
   // TODO: Save messages
+  console.log(messages);
 }
