@@ -1,12 +1,10 @@
 # Intro
 
-frontend-as-coordinator vs. backend-as-coordinator
-
-rich client pages powered directly by the server
-
 # Demos
 
-- [ ] 1: PPR
-- [ ] 2: AI streams
+- [ ] 1: Partial prerendering
+- [ ] 2: AI streams with RSC
 - [ ] 3: Optimistic state
 - [ ] 4: Runtime prefetch
+
+# Outro
