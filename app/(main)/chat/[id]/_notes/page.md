@@ -1,28 +1,35 @@
+```tsx
 import { db } from '@/db';
 import { getCurrentUser } from '@/lib/get-current-user';
 import { notFound } from 'next/navigation';
 import Client from './client';
 
-// export const unstable_prefetch = {
-//   mode: 'runtime',
-//   samples: [{}],
-// };
+export const unstable_prefetch = {
+  mode: 'runtime',
+  samples: [{}],
+};
 
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
-  const chatPromise = params.then((p) => getChat(p.id));
+  const chatPromise = params.then((p) => verifyAndGetChat(p.id));
 
   return <Client chatPromise={chatPromise} />;
 }
 
-async function getChat(chatId: string) {
+async function verifyAndGetChat(chatId: string) {
   const user = await getCurrentUser();
 
   if (!user) {
     notFound();
   }
 
+  return getChat(chatId, user.id);
+}
+
+async function getChat(chatId: string, userId: string) {
+  'use cache';
+
   const chat = await db.query.chats.findFirst({
-    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, user.id)),
+    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
     with: {
       messages: {
         columns: {
@@ -48,3 +55,4 @@ async function getChat(chatId: string) {
 
   return chat;
 }
+```
