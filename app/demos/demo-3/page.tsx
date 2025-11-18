@@ -1,10 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { getStream } from './actions';
+import { useRef } from 'react';
 
-export default function Page() {
-  const [response, setResponse] = useState('');
+export default function Client() {
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
@@ -21,12 +19,21 @@ export default function Page() {
 
             formRef.current?.reset();
 
-            const stream = await getStream(message);
+            // const userMessage: DemoMessage = {
+            //   id: window.crypto.randomUUID(),
+            //   content: message,
+            //   role: 'user',
+            //   status: 'DONE',
+            // };
 
-            setResponse('');
-            for await (const delta of stream) {
-              setResponse((curr) => curr + delta);
-            }
+            // const assistantMessage: DemoMessage = {
+            //   id: window.crypto.randomUUID(),
+            //   content: '[assistant response here]',
+            //   role: 'assistant',
+            //   status: 'DONE',
+            // };
+
+            // TODO: Persist messages
           }}
           ref={formRef}
         >
@@ -39,12 +46,6 @@ export default function Page() {
           />
         </form>
       </div>
-
-      {response && (
-        <div className="mt-8">
-          <p>{response}</p>
-        </div>
-      )}
     </main>
   );
 }

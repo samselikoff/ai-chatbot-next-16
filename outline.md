@@ -8,6 +8,7 @@ rich client pages powered directly by the server
 
 - [ ] 1: PPR
 - [ ] 2: AI streams
+- [ ] 3: Optimistic state
 
 - Optimistic
 - Activity keeps draft messages

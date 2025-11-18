@@ -6,8 +6,11 @@ import { eq } from 'drizzle-orm';
 import { refresh, updateTag } from 'next/cache';
 import OpenAI from 'openai';
 import { Message } from '../MessageLog';
+import { getCurrentUser } from '@/lib/get-current-user';
 
 export async function continueChat(userMessage: Message) {
+  await getCurrentUser();
+
   const existingMessages = await db.query.messages.findMany({
     where: (t, { eq }) => eq(t.chatId, userMessage.chatId),
     orderBy: (t, { asc }) => asc(t.position),
