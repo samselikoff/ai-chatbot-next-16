@@ -9,7 +9,7 @@ export default async function Page() {
         </div>
 
         <div className="flex flex-col overflow-y-auto grow py-2">
-          {/* Show chats */}
+          {/* TODO: Show chats */}
         </div>
       </nav>
 

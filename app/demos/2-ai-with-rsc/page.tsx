@@ -1,3 +1,5 @@
+'use client';
+
 export default function Page() {
   return (
     <main className="grow flex flex-col justify-center max-w-xl mx-auto">
@@ -6,7 +8,15 @@ export default function Page() {
       </h1>
 
       <div className="mt-8">
-        <form>
+        <form
+          action={async (formData) => {
+            const message = formData.get('message');
+            if (typeof message !== 'string') return;
+
+            // TODO: Get stream
+            console.log(message);
+          }}
+        >
           <input
             name="message"
             type="text"
