@@ -9,22 +9,26 @@ import Client from './client';
 // };
 
 export default async function Page({ params }: PageProps<'/chat/[id]'>) {
-  const chatPromise = params.then((p) => getChat(p.id));
+  const chatPromise = params.then((p) => verifyUserAndGetChat(p.id));
 
   return <Client chatPromise={chatPromise} />;
 }
 
-async function getChat(chatId: string) {
+async function verifyUserAndGetChat(chatId: string) {
   const user = await getCurrentUser();
 
   if (!user) {
     notFound();
   }
 
+  return getChat(chatId, user.id);
+}
+
+async function getChat(chatId: string, userId: string) {
   // Simulate delay
   // await new Promise((resolve) => setTimeout(resolve, 250));
   const chat = await db.query.chats.findFirst({
-    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, user.id)),
+    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
     with: {
       messages: {
         columns: {
