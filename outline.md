@@ -7,4 +7,6 @@
 - [ ] 3: Optimistic state
 - [ ] 4: Runtime prefetch
 
-# Outro
+# Repo
+
+github.com/samselikoff/ai-chatbot-next-16
