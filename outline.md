@@ -1,6 +1,6 @@
 # Intro
 
-- In Next 16, pages are static _and_ dynamic
+In Next 16, pages are static _and_ dynamic
 
 # Demos
 
