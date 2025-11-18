@@ -21,7 +21,8 @@ async function getChat(chatId: string) {
     notFound();
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 250));
+  // Simulate delay
+  // await new Promise((resolve) => setTimeout(resolve, 250));
   const chat = await db.query.chats.findFirst({
     where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, user.id)),
     with: {
