@@ -6,3 +6,7 @@ export type DemoMessage = {
   role: 'user' | 'assistant';
   status: 'INIT' | 'DONE';
 };
+
+export async function saveMessages(messages: DemoMessage[]) {
+  // TODO: Save messages
+}
