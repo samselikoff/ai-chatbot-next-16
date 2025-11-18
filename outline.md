@@ -1,5 +1,7 @@
 # Intro
 
+- In Next 16, pages are static _and_ dynamic
+
 # Demos
 
 - [ ] 1: Partial prerendering
