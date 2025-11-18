@@ -8,25 +8,23 @@ import Client from './client';
 //   samples: [{}],
 // };
 
-export default async function Page({ params }: PageProps<'/chat/[id]'>) {
-  const chatPromise = params.then((p) => verifyUserAndGetChat(p.id));
+export default async function Page(props: PageProps<'/chat/[id]'>) {
+  const chatPromise = verifyUserAndGetChat(props);
 
   return <Client chatPromise={chatPromise} />;
 }
 
-async function verifyUserAndGetChat(chatId: string) {
+async function verifyUserAndGetChat(props: PageProps<'/chat/[id]'>) {
   const user = await getCurrentUser();
+  const { id } = await props.params;
 
-  if (!user) {
-    notFound();
-  }
-
-  return getChat(chatId, user.id);
+  return getChat(id, user.id);
 }
 
 async function getChat(chatId: string, userId: string) {
   // Simulate delay
   // await new Promise((resolve) => setTimeout(resolve, 250));
+
   const chat = await db.query.chats.findFirst({
     where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
     with: {
