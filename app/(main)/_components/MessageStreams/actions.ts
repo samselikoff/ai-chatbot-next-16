@@ -2,12 +2,15 @@
 
 import { db } from '@/db';
 import { messages } from '@/db/schema';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { eq } from 'drizzle-orm';
-import { updateTag } from 'next/cache';
+import { refresh } from 'next/cache';
 import OpenAI from 'openai';
 import { Message } from '../MessageLog';
 
 export async function continueChat(userMessage: Message) {
+  await getCurrentUser();
+
   const existingMessages = await db.query.messages.findMany({
     where: (t, { eq }) => eq(t.chatId, userMessage.chatId),
     orderBy: (t, { asc }) => asc(t.position),
@@ -40,5 +43,6 @@ export async function completeMessage(
     .set({ content, status: 'DONE' })
     .where(eq(messages.id, assistantMessage.id));
 
-  updateTag(`chat:${assistantMessage.chatId}`);
+  // updateTag(`chat:${assistantMessage.chatId}`);
+  refresh();
 }

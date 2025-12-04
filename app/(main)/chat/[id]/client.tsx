@@ -2,8 +2,8 @@
 
 import { Suspense, useOptimistic } from 'react';
 import { Await } from '../../_components/Await';
-import { Chat, MessageLog, Message } from '../../_components/MessageLog';
 import { MessageComposer } from '../../_components/MessageComposer';
+import { Chat, Message, MessageLog } from '../../_components/MessageLog';
 import { useMessageStreams } from '../../_components/MessageStreams/use-message-streams';
 import Spinner from '../../_components/Spinner';
 import { saveMessages } from './actions';

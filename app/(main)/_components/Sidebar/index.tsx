@@ -1,15 +1,16 @@
 import { db } from '@/db';
-import { getCurrentUser } from '@/lib/current-user';
-import { stackServerApp } from '@/stack/server';
+import { chats, messages } from '@/db/schema';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { PencilSquareIcon } from '@heroicons/react/16/solid';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import { Dots } from '../Dots';
 import { ChatLink } from './ChatLink';
 
 export async function Sidebar() {
   return (
-    <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col">
+    <nav className="w-40 shrink-0 h-dvh bg-gray-100 flex flex-col">
       <div className="border-b border-gray-300 flex flex-col">
         <p className="mx-5 mt-3 text-sm font-semibold text-gray-700">
           Next 16 Chatbot
@@ -38,23 +39,38 @@ export async function Sidebar() {
 async function Chats() {
   const currentUser = await getCurrentUser();
 
-  const chats = await db.query.chats.findMany({
-    orderBy: (t, { desc }) => desc(t.createdAt),
-    where: (t, { eq }) => eq(t.userId, currentUser.id),
-  });
+  const sidebarChats = await db
+    .select({
+      id: chats.id,
+      title: chats.title,
+      isStreaming: sql<boolean>`COALESCE(COUNT(${messages.id}) > 0, false)`.as(
+        'is_streaming'
+      ),
+    })
+    .from(chats)
+    .leftJoin(
+      messages,
+      and(eq(messages.chatId, chats.id), eq(messages.status, 'INIT'))
+    )
+    .where(eq(chats.userId, currentUser.id))
+    .groupBy(chats.id, chats.title)
+    .orderBy(desc(chats.createdAt));
 
   return (
     <>
-      {chats.map((chat) => (
+      {sidebarChats.map((chat) => (
         <ChatLink
           key={chat.id}
           href={`/chat/${chat.id}`}
-          className="mx-2 px-3 py-2 rounded-lg hover:bg-gray-200
-            data-active:bg-gray-300
-            text-sm text-gray-900
-          "
+          className="inline-flex items-center mx-2 px-3 py-2 rounded-lg hover:bg-gray-200 data-active:bg-gray-300 text-sm text-gray-900"
         >
           {chat.title}
+
+          {chat.isStreaming && (
+            <span className="ml-auto">
+              <Dots />
+            </span>
+          )}
         </ChatLink>
       ))}
     </>
@@ -73,9 +89,8 @@ async function UserInfo() {
         <form
           action={async () => {
             'use server';
-            const user = await stackServerApp.getUser();
-            await user?.signOut();
-            redirect('/handler/sign-up');
+            const currentUser = await getCurrentUser();
+            await currentUser.signOut();
           }}
         >
           <button

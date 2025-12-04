@@ -1,0 +1,6 @@
+- Add chats to sidebar
+- Add loading.tsx
+- Show Suspense devtools to design
+- Remove loading.tsx, extract ChatList, wrap in Suspense
+- ViewTransition
+- Explain PPR

@@ -1,3 +1,4 @@
+```tsx
 import { db } from '@/db';
 import { getCurrentUser } from '@/lib/get-current-user';
 import { notFound } from 'next/navigation';
@@ -8,24 +9,24 @@ export const unstable_prefetch = {
   samples: [{}],
 };
 
-export default async function Page(props: PageProps<'/chat/[id]'>) {
-  const chatPromise = verifyUserAndGetChat(props);
+export default async function Page({ params }: PageProps<'/chat/[id]'>) {
+  const chatPromise = params.then((p) => verifyAndGetChat(p.id));
 
   return <Client chatPromise={chatPromise} />;
 }
 
-async function verifyUserAndGetChat(props: PageProps<'/chat/[id]'>) {
+async function verifyAndGetChat(chatId: string) {
   const user = await getCurrentUser();
-  const { id } = await props.params;
 
-  return getChat(id, user.id);
+  if (!user) {
+    notFound();
+  }
+
+  return getChat(chatId, user.id);
 }
 
 async function getChat(chatId: string, userId: string) {
   'use cache';
-
-  // Simulate delay
-  await new Promise((resolve) => setTimeout(resolve, 250));
 
   const chat = await db.query.chats.findFirst({
     where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
@@ -54,3 +55,4 @@ async function getChat(chatId: string, userId: string) {
 
   return chat;
 }
+```

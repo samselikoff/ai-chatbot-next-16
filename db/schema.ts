@@ -62,3 +62,21 @@ export const messagesRelations = relations(messages, ({ one }) => ({
     references: [chats.id],
   }),
 }));
+
+// Demo table
+export const demoMessageRoleEnum = pgEnum('demo_message_role', [
+  'user',
+  'assistant',
+]);
+export const demoMessageStatusEnum = pgEnum('demo_message_status', [
+  'INIT',
+  'DONE',
+]);
+
+export const demoMessages = pgTable('demo_messages', {
+  id: uuid().defaultRandom().primaryKey(),
+  content: text('content').notNull(),
+  role: demoMessageRoleEnum('role').notNull(),
+  status: demoMessageStatusEnum('status').notNull(),
+  ...timestamps,
+});
