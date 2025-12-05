@@ -8,8 +8,6 @@ import { redirect } from 'next/navigation';
 import { Chat } from '../_components/MessageLog';
 
 export async function createChat(clientChat: Chat) {
-  // TODO: Validate clientChat argument
-
   const user = await stackServerApp.getUser();
 
   if (!user) {
