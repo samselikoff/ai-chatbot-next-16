@@ -1,9 +1,8 @@
 import { db } from '@/db';
 import { getCurrentUser } from '@/lib/current-user';
-import { stackServerApp } from '@/stack/server';
+import { getSession } from '@/lib/session';
 import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { ChatLink } from './ChatLink';
 
@@ -37,6 +36,9 @@ export async function Sidebar() {
 
 async function Chats() {
   const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return null;
+  }
 
   const chats = await db.query.chats.findMany({
     orderBy: (t, { desc }) => desc(t.createdAt),
@@ -66,16 +68,14 @@ async function UserInfo() {
 
   return (
     <div className="p-4 flex justify-between gap-2 text-sm border-t border-gray-300">
-      <p className="truncate min-w-0">
-        {currentUser.displayName ?? 'Welcome!'}
-      </p>
+      <p className="truncate min-w-0">{currentUser?.email ?? 'nope'}</p>
       <div className="shrink-0">
         <form
           action={async () => {
             'use server';
-            const user = await stackServerApp.getUser();
-            await user?.signOut();
-            redirect('/handler/sign-up');
+            const session = await getSession();
+            session.destroy();
+            await session.save();
           }}
         >
           <button

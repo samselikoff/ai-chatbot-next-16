@@ -2,13 +2,13 @@
 
 import { db } from '@/db';
 import { chats, messages } from '@/db/schema';
-import { stackServerApp } from '@/stack/server';
 import { count, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { Chat } from '../_components/MessageLog';
+import { getCurrentUser } from '@/lib/current-user';
 
 export async function createChat(clientChat: Chat) {
-  const user = await stackServerApp.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     return;

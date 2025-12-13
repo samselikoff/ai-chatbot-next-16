@@ -1,11 +1,23 @@
-import { stackServerApp } from '@/stack/server';
-import { redirect } from 'next/navigation';
+import { db } from '@/db';
+import { getSession } from './session';
 
 export async function getCurrentUser() {
-  const user = await stackServerApp.getUser();
+  const { userId } = await getSession();
+
+  if (!userId) {
+    return null;
+  }
+
+  const user = await db.query.users.findFirst({
+    where: (t, { eq }) => eq(t.id, userId),
+    columns: {
+      id: true,
+      email: true,
+    },
+  });
 
   if (!user) {
-    redirect('/handler/sign-up');
+    return null;
   }
 
   return user;

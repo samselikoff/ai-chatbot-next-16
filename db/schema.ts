@@ -19,6 +19,13 @@ const timestamps = {
     .$onUpdate(() => new Date()),
 };
 
+export const users = pgTable('users', {
+  id: uuid().defaultRandom().primaryKey(),
+  email: text('title').notNull(),
+  passwordHash: text('password_hash').notNull(),
+  ...timestamps,
+});
+
 export const chats = pgTable(
   'chats',
   {
