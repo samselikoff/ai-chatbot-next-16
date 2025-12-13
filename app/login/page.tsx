@@ -36,11 +36,9 @@ async function login(formData: FormData) {
 }
 
 export default async function Page() {
-  const { userId } = await getSession();
-
   return (
     <div className="p-8">
-      <p>Logged in as: {userId}</p>
+      <p>Logg in</p>
       <form action={login}>
         <input
           className="border"

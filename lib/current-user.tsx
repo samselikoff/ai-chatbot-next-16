@@ -1,11 +1,12 @@
 import { db } from '@/db';
+import { redirect } from 'next/navigation';
 import { getSession } from './session';
 
 export async function getCurrentUser() {
   const { userId } = await getSession();
 
   if (!userId) {
-    return null;
+    redirect('/login');
   }
 
   const user = await db.query.users.findFirst({
@@ -17,7 +18,7 @@ export async function getCurrentUser() {
   });
 
   if (!user) {
-    return null;
+    redirect('/login');
   }
 
   return user;
