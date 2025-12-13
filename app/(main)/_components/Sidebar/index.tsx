@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { getCurrentUser } from '@/lib/current-user';
+import { getCurrentUser } from '@/lib/get-current-user';
 import { getSession } from '@/lib/session';
 import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import Link from 'next/link';

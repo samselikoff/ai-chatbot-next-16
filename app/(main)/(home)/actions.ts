@@ -5,7 +5,7 @@ import { chats, messages } from '@/db/schema';
 import { count, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { Chat } from '../_components/MessageLog';
-import { getCurrentUser } from '@/lib/current-user';
+import { getCurrentUser } from '@/lib/get-current-user';
 
 export async function createChat(clientChat: Chat) {
   const user = await getCurrentUser();

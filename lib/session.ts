@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
+import { getIronSession, unsealData } from 'iron-session';
 
 const sessionOptions = {
   cookieName: 'app_session',
@@ -20,4 +20,10 @@ type SessionData = {
 
 export async function getSession() {
   return getIronSession<SessionData>(await cookies(), sessionOptions);
+}
+
+export async function unsealCookie(cookie: string) {
+  return unsealData<{ userId?: string }>(cookie, {
+    password: sessionOptions.password,
+  });
 }
