@@ -38,7 +38,7 @@ async function login(formData: FormData) {
 export default async function Page() {
   return (
     <div className="p-8">
-      <p>Logg in</p>
+      <p>Log in</p>
       <form action={login}>
         <input
           className="border"
