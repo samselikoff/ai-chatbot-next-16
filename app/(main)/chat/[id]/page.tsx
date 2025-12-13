@@ -17,7 +17,7 @@ export default async function Page({ params }: PageProps<'/chat/[id]'>) {
 }
 
 async function getChat(params: PageProps<'/chat/[id]'>['params']) {
-  // Access runtime data
+  // 1️⃣: Access runtime data
   const { id } = await params;
   const appSessionCookie = (await cookies()).get('app_session')?.value;
 
@@ -28,7 +28,7 @@ async function getChatWithSessionCookie(chatId: string, sessionCookie: string) {
   'use cache';
   cacheTag(`chat:${chatId}`);
 
-  // Can't be done at runtime - must be done inside "use cache".
+  // 2️⃣: Unseal the cookie
   const { userId } = await unsealCookie(sessionCookie);
 
   if (!userId) {
