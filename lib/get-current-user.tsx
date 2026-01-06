@@ -1,6 +1,7 @@
 import { db } from '@/db';
 import { redirect } from 'next/navigation';
 import { getSession } from './session';
+import { connection } from 'next/server';
 
 export type User = {
   id: string;
@@ -8,6 +9,7 @@ export type User = {
 };
 
 export async function getCurrentUser(): Promise<User> {
+  await connection();
   const { userId } = await getSession();
 
   if (!userId) {

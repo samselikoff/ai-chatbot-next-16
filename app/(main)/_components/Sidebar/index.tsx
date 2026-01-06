@@ -5,6 +5,7 @@ import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ChatLink } from './ChatLink';
+import { cookies } from 'next/headers';
 
 export async function Sidebar() {
   return (
