@@ -6,6 +6,7 @@ import * as z from 'zod';
 
 async function login(formData: FormData) {
   'use server';
+  console.log('     login action');
 
   const { email, password } = z
     .object({
@@ -19,12 +20,13 @@ async function login(formData: FormData) {
   });
 
   if (!user) {
-    console.log('email doesnt exist');
+    console.log(`Email doesn't belong to a user`);
     return;
   }
 
-  if (!(await bcrypt.compare(password, user.passwordHash))) {
-    console.log('bad password');
+  const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
+  if (!passwordsMatch) {
+    console.log('Bad password');
     return;
   }
 

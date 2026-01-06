@@ -5,7 +5,7 @@ import { PencilSquareIcon } from '@heroicons/react/16/solid';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ChatLink } from './ChatLink';
-import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export async function Sidebar() {
   return (
@@ -77,6 +77,8 @@ async function UserInfo() {
             const session = await getSession();
             session.destroy();
             await session.save();
+
+            redirect('/login');
           }}
         >
           <button
