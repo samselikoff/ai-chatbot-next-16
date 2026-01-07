@@ -13,7 +13,7 @@ export async function getCurrentUser(): Promise<User> {
   const { userId } = await getSession();
 
   if (!userId) {
-    redirect('/login');
+    redirect('/sign-in');
   }
 
   const user = await db.query.users.findFirst({
@@ -25,7 +25,7 @@ export async function getCurrentUser(): Promise<User> {
   });
 
   if (!user) {
-    redirect('/login');
+    redirect('/sign-in');
   }
 
   return user;

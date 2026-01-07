@@ -5,6 +5,7 @@
 - [ ] Create account page
 - [ ] Login page: Show error for bad login info
 - [ ] Message composer resets after action completes
+- [ ] Look at initial paint bc of sidebar thing
 - [ ] Mobile designs
 - [ ] In-progress indicator on sidebar?
 - [ ] Autogenerate chat title name

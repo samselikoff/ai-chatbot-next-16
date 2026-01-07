@@ -9,14 +9,14 @@ import { redirect } from 'next/navigation';
 
 export async function Sidebar() {
   return (
-    <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col">
-      <div className="border-b border-gray-300 flex flex-col">
+    <nav className="w-60 shrink-0 h-dvh bg-gray-100 flex flex-col border-r border-gray-200">
+      <div className="flex flex-col">
         <p className="mx-5 mt-3 text-sm font-semibold text-gray-700">
           Next 16 Chatbot
         </p>
         <Link
           href="/"
-          className="m-2 px-3 py-2 hover:bg-gray-200 mb-4 text-sm rounded-lg inline-flex items-center gap-1 text-gray-800"
+          className="m-2 px-3 py-2 hover:bg-gray-200 mb-4 text-sm rounded-lg inline-flex items-center gap-2 text-gray-800"
         >
           <PencilSquareIcon className="size-4" />
           New chat
@@ -48,6 +48,10 @@ async function Chats() {
 
   return (
     <>
+      {chats.length > 0 && (
+        <p className="mx-2 px-3 py-2 text-sm text-gray-500">Your chats</p>
+      )}
+
       {chats.map((chat) => (
         <ChatLink
           key={chat.id}
@@ -78,7 +82,7 @@ async function UserInfo() {
             session.destroy();
             await session.save();
 
-            redirect('/login');
+            redirect('/sign-in');
           }}
         >
           <button
