@@ -2,8 +2,8 @@
 
 ## TODO
 
-- [ ] Create account page
 - [ ] Login page: Show error for bad login info
+- [ ] Sign up page: Show error for bad info
 - [ ] Message composer resets after action completes
 - [ ] Look at initial paint bc of sidebar thing
 - [ ] Mobile designs
@@ -11,6 +11,7 @@
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
 - [ ] Try Redis stream?
+- [x] Create account page
 - [x] Login page
 - [x] Error when loading a chat/[id] page
 
