@@ -2,7 +2,6 @@
 
 ## TODO
 
-- [ ] Login page: Show error for bad login info
 - [ ] Sign up page: Show error for bad info
 - [ ] Message composer resets after action completes
 - [ ] Use Seb's StreamReader
@@ -12,6 +11,7 @@
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
 - [ ] Try Redis stream?
+- [x] Login page: Show error for bad login info
 - [x] Create account page
 - [x] Login page
 - [x] Error when loading a chat/[id] page
