@@ -5,6 +5,7 @@
 - [ ] Login page: Show error for bad login info
 - [ ] Sign up page: Show error for bad info
 - [ ] Message composer resets after action completes
+- [ ] Use Seb's StreamReader
 - [ ] Look at initial paint bc of sidebar thing
 - [ ] Mobile designs
 - [ ] In-progress indicator on sidebar?
@@ -14,6 +15,14 @@
 - [x] Create account page
 - [x] Login page
 - [x] Error when loading a chat/[id] page
+
+## Blocked
+
+- [ ] Add back in runtime prefetche
+
+## Bugs + papercuts
+
+- [ ] Load app, create chat, press back button, create new chat. See Suspense boundary.
 
 ## Questions
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { useOptimistic } from 'react';
-import { Chat, MessageLog, Message } from '../_components/MessageLog';
 import { MessageComposer } from '../_components/MessageComposer';
+import { Chat, Message, MessageLog } from '../_components/MessageLog';
 import { useMessageStreams } from '../_components/MessageStreams/use-message-streams';
 import { createChat } from './actions';
 
