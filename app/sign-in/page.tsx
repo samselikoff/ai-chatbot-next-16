@@ -1,52 +1,18 @@
-import { db } from '@/db';
-import { getSession } from '@/lib/session';
-import bcrypt from 'bcryptjs';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import * as z from 'zod';
+"use client";
 
-async function signIn(formData: FormData) {
-  'use server';
+import { useActionState } from "react";
+import Link from "next/link";
+import clsx from "clsx";
+import Spinner from "@/components/Spinner";
+import { signIn } from "./actions";
 
-  const { email, password } = z
-    .object({
-      email: z.email(),
-      password: z.string(),
-    })
-    .parse(Object.fromEntries(formData));
+export default function Page() {
+  const [state, action, isPending] = useActionState(signIn, null);
 
-  const user = await db.query.users.findFirst({
-    where: (t, { eq }) => eq(t.email, email),
-  });
-
-  if (!user) {
-    console.log(`Email doesn't belong to a user`);
-    return;
-  }
-
-  const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
-  if (!passwordsMatch) {
-    console.log('Bad password');
-    return;
-  }
-
-  const session = await getSession();
-  session.userId = user.id;
-  await session.save();
-
-  redirect('/');
-}
-
-export default async function Page() {
   return (
     <>
-      <div className="flex min-h-dvh bg-gray-50 w-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-dvh w-full flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          {/* <img
-            alt="Your Company"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=gray&shade=600"
-            className="mx-auto h-10 w-auto"
-          /> */}
           <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>
@@ -54,13 +20,13 @@ export default async function Page() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 shadow-sm sm:rounded-lg sm:px-12">
-            <form action={signIn} className="space-y-6">
+            <form action={action} className="space-y-6">
               <div>
                 <label
                   htmlFor="email"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
-                  Email address
+                  Email
                 </label>
                 <div className="mt-2">
                   <input
@@ -69,9 +35,16 @@ export default async function Page() {
                     type="email"
                     required
                     autoComplete="email"
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-800 sm:text-sm/6"
+                    defaultValue={`${state?.formData?.get("email") ?? ""}`}
+                    className={clsx(
+                      "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-800 sm:text-sm/6",
+                      state?.error ? "outline-red-500" : "outline-gray-300",
+                    )}
                   />
                 </div>
+                {state?.error && (
+                  <p className="mt-2 text-sm text-red-600">{state.error}</p>
+                )}
               </div>
 
               <div>
@@ -87,6 +60,7 @@ export default async function Page() {
                     name="password"
                     type="password"
                     required
+                    defaultValue={`${state?.formData?.get("password") ?? ""}`}
                     autoComplete="current-password"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-800 sm:text-sm/6"
                   />
@@ -96,16 +70,17 @@ export default async function Page() {
               <div>
                 <button
                   type="submit"
+                  disabled={isPending}
                   className="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800"
                 >
-                  Sign in
+                  <Spinner loading={isPending}>Sign in</Spinner>
                 </button>
               </div>
             </form>
           </div>
 
           <p className="mt-10 text-center text-sm/6 text-gray-700">
-            {`Don't have an account?`}{' '}
+            {`Don't have an account?`}{" "}
             <Link
               href="/sign-up"
               className="font-semibold text-gray-800 hover:text-gray-700"

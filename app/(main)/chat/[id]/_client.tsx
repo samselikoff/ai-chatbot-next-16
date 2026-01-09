@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Suspense, useOptimistic } from 'react';
-import { Await } from '../../_components/Await';
-import { Chat, MessageLog, Message } from '../../_components/MessageLog';
-import { MessageComposer } from '../../_components/MessageComposer';
-import { useMessageStreams } from '../../_components/MessageStreams/use-message-streams';
-import Spinner from '../../_components/Spinner';
-import { saveMessages } from './actions';
+import { Suspense, useOptimistic } from "react";
+import { Await } from "../../_components/Await";
+import { Chat, MessageLog, Message } from "../../_components/MessageLog";
+import { MessageComposer } from "../../_components/MessageComposer";
+import { useMessageStreams } from "../../_components/MessageStreams/use-message-streams";
+import { saveMessages } from "./actions";
+import Spinner from "@/components/Spinner";
 
 export default function Client({
   chatPromise,
@@ -15,15 +15,15 @@ export default function Client({
 }) {
   const { createMessageStream } = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
-    []
+    [],
   );
 
   return (
-    <div className="h-dvh flex flex-col">
+    <div className="flex h-dvh flex-col">
       <div className="grow overflow-y-auto">
         <Suspense
           fallback={
-            <div className="pt-20 flex justify-center">
+            <div className="flex justify-center pt-20">
               <Spinner />
             </div>
           }
@@ -42,7 +42,7 @@ export default function Client({
         submitAction={async (messageText) => {
           const chat = await chatPromise;
           const lastPosition = Math.max(
-            ...chat.messages.map((m) => m.position)
+            ...chat.messages.map((m) => m.position),
           );
 
           const messages: [Message, Message] = [
@@ -50,17 +50,17 @@ export default function Client({
               id: window.crypto.randomUUID(),
               chatId: chat.id,
               content: messageText,
-              role: 'user',
+              role: "user",
               position: lastPosition + 1,
-              status: 'DONE',
+              status: "DONE",
             },
             {
               id: window.crypto.randomUUID(),
               chatId: chat.id,
-              content: '',
-              role: 'assistant',
+              content: "",
+              role: "assistant",
               position: lastPosition + 2,
-              status: 'INIT',
+              status: "INIT",
             },
           ];
 

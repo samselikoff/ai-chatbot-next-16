@@ -1,13 +1,13 @@
-import { db } from '@/db';
-import { users } from '@/db/schema';
-import { getSession } from '@/lib/session';
-import bcrypt from 'bcryptjs';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import * as z from 'zod';
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { getSession } from "@/lib/session";
+import bcrypt from "bcryptjs";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import * as z from "zod";
 
 async function signUp(formData: FormData) {
-  'use server';
+  "use server";
 
   const { email, password } = z
     .object({
@@ -24,7 +24,7 @@ async function signUp(formData: FormData) {
   });
 
   if (existingUser) {
-    throw new Error('already in use');
+    throw new Error("already in use");
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -37,13 +37,13 @@ async function signUp(formData: FormData) {
   session.userId = user.id;
   await session.save();
 
-  redirect('/');
+  redirect("/");
 }
 
 export default async function Page() {
   return (
     <>
-      <div className="flex min-h-dvh bg-gray-50 w-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-dvh w-full flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
             Create a new account
@@ -58,7 +58,7 @@ export default async function Page() {
                   htmlFor="email"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
-                  Email address
+                  Email
                 </label>
                 <div className="mt-2">
                   <input
@@ -103,7 +103,7 @@ export default async function Page() {
           </div>
 
           <p className="mt-10 text-center text-sm/6 text-gray-700">
-            {`Already have an account?`}{' '}
+            {`Already have an account?`}{" "}
             <Link
               href="/sign-in"
               className="font-semibold text-gray-800 hover:text-gray-700"
