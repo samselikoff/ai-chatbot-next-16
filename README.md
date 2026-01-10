@@ -2,6 +2,7 @@
 
 ## TODO
 
+- [ ] Polish autocomplete for email/password on sign-in/sign-up
 - [ ] Sign up page: Show error for bad info
 - [ ] Message composer resets after action completes
 - [ ] Use Seb's StreamReader
@@ -10,6 +11,7 @@
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
 - [ ] Try Redis stream?
+- [x] Focus input field after a navigation
 - [x] Look at initial paint bc of sidebar thing
 - [x] Login page: Show error for bad login info
 - [x] Create account page
