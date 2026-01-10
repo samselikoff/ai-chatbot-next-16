@@ -5,12 +5,12 @@
 - [ ] Sign up page: Show error for bad info
 - [ ] Message composer resets after action completes
 - [ ] Use Seb's StreamReader
-- [ ] Look at initial paint bc of sidebar thing
 - [ ] Mobile designs
 - [ ] In-progress indicator on sidebar?
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
 - [ ] Try Redis stream?
+- [x] Look at initial paint bc of sidebar thing
 - [x] Login page: Show error for bad login info
 - [x] Create account page
 - [x] Login page
