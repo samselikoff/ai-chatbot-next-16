@@ -1,53 +1,28 @@
 "use client";
 
-import { Suspense, useOptimistic } from "react";
-import { Await } from "../../_components/Await";
-import { Chat, MessageLog, Message } from "../../_components/MessageLog";
+import { useOptimistic } from "react";
 import { MessageComposer } from "../../_components/MessageComposer";
+import { Chat, Message, MessageLog } from "../../_components/MessageLog";
 import { useMessageStreams } from "../../_components/MessageStreams/use-message-streams";
 import { saveMessages } from "./actions";
-import Spinner from "@/components/Spinner";
 
-export default function Client({
-  chatPromise,
-}: {
-  chatPromise: Promise<Chat>;
-}) {
-  const { createMessageStream, messageStreams } = useMessageStreams();
+export default function Client({ chat }: { chat: Chat }) {
+  const { createMessageStream } = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     [],
   );
+  const allMessages = [...chat.messages, ...optimisticMessages];
+  const isStreaming = allMessages.some((m) => m.status === "INIT");
 
   return (
     <div className="flex h-dvh flex-col">
       <div className="grow overflow-y-auto">
-        <Suspense
-          fallback={
-            <div className="flex justify-center pt-20">
-              <Spinner />
-            </div>
-          }
-        >
-          <Await promise={chatPromise}>
-            {(chat) => (
-              <MessageLog
-                messages={[...chat.messages, ...optimisticMessages]}
-              />
-            )}
-          </Await>
-        </Suspense>
+        <MessageLog messages={allMessages} />
       </div>
 
       <MessageComposer
+        disabled={isStreaming}
         submitAction={async (messageText) => {
-          const chat = await chatPromise;
-
-          // console.log(messageStreams);
-          // if (messageStreams[chat.id]) {
-          //   console.log("currently streaming");
-          //   return;
-          // }
-
           const lastPosition = Math.max(
             ...chat.messages.map((m) => m.position),
           );

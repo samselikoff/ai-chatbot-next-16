@@ -1,31 +1,45 @@
-import { db } from '@/db';
-import { unsealCookie } from '@/lib/session';
-import { cacheTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
-import Client from './_client';
+import { db } from "@/db";
+import { unsealCookie } from "@/lib/session";
+import { cacheTag } from "next/cache";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
+import Client from "./client";
+import { Suspense } from "react";
+import Spinner from "@/components/Spinner";
 
 export const unstable_prefetch = {
-  mode: 'runtime',
+  mode: "runtime",
   samples: [{}],
 };
 
-export default async function Page({ params }: PageProps<'/chat/[id]'>) {
+export default async function Page({ params }: PageProps<"/chat/[id]">) {
   const chatPromise = getChat(params);
 
-  return <Client chatPromise={chatPromise} />;
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center pt-20">
+          <Spinner />
+        </div>
+      }
+    >
+      {chatPromise.then((chat) => (
+        <Client chat={chat} />
+      ))}
+    </Suspense>
+  );
 }
 
-async function getChat(params: PageProps<'/chat/[id]'>['params']) {
+async function getChat(params: PageProps<"/chat/[id]">["params"]) {
   // 1️⃣: Access runtime data
   const { id } = await params;
-  const appSessionCookie = (await cookies()).get('app_session')?.value;
+  const appSessionCookie = (await cookies()).get("app_session")?.value;
 
-  return getChatWithSessionCookie(id, appSessionCookie ?? '');
+  return getChatWithSessionCookie(id, appSessionCookie ?? "");
 }
 
 async function getChatWithSessionCookie(chatId: string, sessionCookie: string) {
-  'use cache';
+  "use cache";
   cacheTag(`chat:${chatId}`);
 
   // 2️⃣: Unseal the cookie

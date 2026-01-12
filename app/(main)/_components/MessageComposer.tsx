@@ -5,8 +5,10 @@ import { useLayoutEffect, useRef, useTransition } from "react";
 import invariant from "tiny-invariant";
 
 export function MessageComposer({
+  disabled,
   submitAction,
 }: {
+  disabled?: boolean;
   submitAction: (messageText: string) => Promise<void>;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -51,7 +53,7 @@ export function MessageComposer({
             <button
               className="inline-flex aspect-square h-full w-full items-center justify-center rounded-full bg-gray-800 font-medium text-white group-[:has(input:invalid)]:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 enabled:hover:bg-gray-700 disabled:opacity-50"
               type="submit"
-              disabled={isPending}
+              disabled={isPending || disabled}
             >
               <ArrowUpIcon className="size-5" />
             </button>
