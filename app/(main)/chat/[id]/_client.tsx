@@ -13,7 +13,7 @@ export default function Client({
 }: {
   chatPromise: Promise<Chat>;
 }) {
-  const { createMessageStream } = useMessageStreams();
+  const { createMessageStream, messageStreams } = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     [],
   );
@@ -41,6 +41,13 @@ export default function Client({
       <MessageComposer
         submitAction={async (messageText) => {
           const chat = await chatPromise;
+
+          // console.log(messageStreams);
+          // if (messageStreams[chat.id]) {
+          //   console.log("currently streaming");
+          //   return;
+          // }
+
           const lastPosition = Math.max(
             ...chat.messages.map((m) => m.position),
           );
