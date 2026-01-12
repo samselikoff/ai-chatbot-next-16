@@ -2,8 +2,10 @@
 
 ## TODO
 
+- [ ] Sign up page: Show error for duplicate email
+- [ ] Sign up page: Show error for short password
+- [ ] Sign up page: Show error for bad email
 - [ ] Polish autocomplete for email/password on sign-in/sign-up
-- [ ] Sign up page: Show error for bad info
 - [ ] Message composer resets after action completes
 - [ ] Use Seb's StreamReader
 - [ ] Mobile designs
