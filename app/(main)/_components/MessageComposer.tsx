@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpIcon } from "@heroicons/react/16/solid";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useTransition } from "react";
 import invariant from "tiny-invariant";
 
 export function MessageComposer({
@@ -11,6 +11,7 @@ export function MessageComposer({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   useLayoutEffect(() => {
     inputRef.current?.focus();
@@ -21,14 +22,19 @@ export function MessageComposer({
       <form
         ref={formRef}
         className="group mx-auto mb-8 w-full max-w-xl"
-        action={async (formData) => {
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.currentTarget);
           const message = formData.get("message");
           invariant(typeof message === "string");
 
           if (message === "") return;
           formRef.current?.reset();
 
-          await submitAction(message);
+          startTransition(async () => {
+            await submitAction(message);
+          });
         }}
       >
         <div className="relative">
@@ -45,6 +51,7 @@ export function MessageComposer({
             <button
               className="inline-flex aspect-square h-full w-full items-center justify-center rounded-full bg-gray-800 font-medium text-white group-[:has(input:invalid)]:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 enabled:hover:bg-gray-700 disabled:opacity-50"
               type="submit"
+              disabled={isPending}
             >
               <ArrowUpIcon className="size-5" />
             </button>
