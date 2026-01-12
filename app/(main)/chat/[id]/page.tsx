@@ -1,20 +1,11 @@
-import { db } from "@/db";
-import { unsealCookie } from "@/lib/session";
-import { cacheTag } from "next/cache";
-import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
-import Client from "./client";
-import { Suspense } from "react";
 import Spinner from "@/components/Spinner";
-
-export const unstable_prefetch = {
-  mode: "runtime",
-  samples: [{}],
-};
+import { db } from "@/db";
+import { getCurrentUser } from "@/lib/get-current-user";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import Client from "./client";
 
 export default async function Page({ params }: PageProps<"/chat/[id]">) {
-  const chatPromise = getChat(params);
-
   return (
     <Suspense
       fallback={
@@ -23,34 +14,18 @@ export default async function Page({ params }: PageProps<"/chat/[id]">) {
         </div>
       }
     >
-      {chatPromise.then((chat) => (
-        <Client chat={chat} />
+      {params.then((p) => (
+        <Content chatId={p.id} />
       ))}
     </Suspense>
   );
 }
 
-async function getChat(params: PageProps<"/chat/[id]">["params"]) {
-  // 1️⃣: Access runtime data
-  const { id } = await params;
-  const appSessionCookie = (await cookies()).get("app_session")?.value;
-
-  return getChatWithSessionCookie(id, appSessionCookie ?? "");
-}
-
-async function getChatWithSessionCookie(chatId: string, sessionCookie: string) {
-  "use cache";
-  cacheTag(`chat:${chatId}`);
-
-  // 2️⃣: Unseal the cookie
-  const { userId } = await unsealCookie(sessionCookie);
-
-  if (!userId) {
-    notFound();
-  }
-
+async function Content({ chatId }: { chatId: string }) {
+  const currentUser = await getCurrentUser();
   const chat = await db.query.chats.findFirst({
-    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
+    where: (t, { and, eq }) =>
+      and(eq(t.id, chatId), eq(t.userId, currentUser.id)),
     with: {
       messages: {
         columns: {
@@ -74,5 +49,5 @@ async function getChatWithSessionCookie(chatId: string, sessionCookie: string) {
     notFound();
   }
 
-  return chat;
+  return <Client chat={chat} />;
 }

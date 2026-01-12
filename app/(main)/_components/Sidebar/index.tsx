@@ -40,10 +40,6 @@ export async function Sidebar() {
 
 async function Chats() {
   const currentUser = await getCurrentUser();
-  if (!currentUser) {
-    return null;
-  }
-
   const sidebarChats = await db
     .select({
       id: chats.id,

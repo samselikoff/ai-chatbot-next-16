@@ -1,7 +1,6 @@
-import { db } from '@/db';
-import { redirect } from 'next/navigation';
-import { getSession } from './session';
-import { connection } from 'next/server';
+import { db } from "@/db";
+import { redirect } from "next/navigation";
+import { getSession } from "./session";
 
 export type User = {
   id: string;
@@ -9,11 +8,10 @@ export type User = {
 };
 
 export async function getCurrentUser(): Promise<User> {
-  await connection();
   const { userId } = await getSession();
 
   if (!userId) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
 
   const user = await db.query.users.findFirst({
@@ -25,7 +23,7 @@ export async function getCurrentUser(): Promise<User> {
   });
 
   if (!user) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
 
   return user;

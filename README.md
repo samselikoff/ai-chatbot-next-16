@@ -2,12 +2,13 @@
 
 ## TODO
 
-- [ ] Use Seb's StreamReader
 - [ ] Mobile designs
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
-- [ ] Message composer resets after creating a new chat (due to redirect from homepage)
+- [ ] Use Seb's StreamReader (https://vercel.slack.com/archives/C07CJPHL49E/p1763676431200339?thread_ts=1763582669.158219&cid=C07CJPHL49E)
 - [ ] Optimistic chats on creation
+- [ ] Message composer resets after creating a new chat (due to redirect from homepage)
+- [x] Remove runtime prefetching for now
 - [x] New chats don't appear on sidebar until first message completes
 - [x] In-progress indicator on sidebar
 - [x] Message composer: disable while streaming.
