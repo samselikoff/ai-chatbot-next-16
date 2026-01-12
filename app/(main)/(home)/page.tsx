@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useOptimistic } from 'react';
-import { MessageComposer } from '../_components/MessageComposer';
-import { Chat, Message, MessageLog } from '../_components/MessageLog';
-import { useMessageStreams } from '../_components/MessageStreams/use-message-streams';
-import { createChat } from './actions';
+import { useOptimistic } from "react";
+import { MessageComposer } from "../_components/MessageComposer";
+import { Chat, Message, MessageLog } from "../_components/MessageLog";
+import { useMessageStreams } from "../_components/MessageStreams/use-message-streams";
+import { createChat } from "./actions";
 
 export default function Home() {
   const { createMessageStream } = useMessageStreams();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
-    []
+    [],
   );
 
   return (
-    <div className="h-dvh flex flex-col max-w-2xl mx-auto justify-center">
+    <div className="mx-auto flex h-dvh max-w-2xl flex-col justify-center">
       {optimisticMessages.length > 0 ? (
         <div className="grow">
           <MessageLog messages={optimisticMessages} />
@@ -30,16 +30,16 @@ export default function Home() {
               id: window.crypto.randomUUID(),
               chatId: clientChatId,
               content: input,
-              role: 'user',
-              status: 'DONE',
+              role: "user",
+              status: "DONE",
               position: 1,
             },
             {
               id: window.crypto.randomUUID(),
               chatId: clientChatId,
-              content: '',
-              role: 'assistant',
-              status: 'INIT',
+              content: "",
+              role: "assistant",
+              status: "INIT",
               position: 2,
             },
           ];
