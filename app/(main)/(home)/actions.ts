@@ -1,11 +1,12 @@
-'use server';
+"use server";
 
-import { db } from '@/db';
-import { chats, messages } from '@/db/schema';
-import { count, eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
-import { Chat } from '../_components/MessageLog';
-import { getCurrentUser } from '@/lib/get-current-user';
+import { db } from "@/db";
+import { chats, messages } from "@/db/schema";
+import { count, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import { Chat } from "../_components/MessageLog";
+import { getCurrentUser } from "@/lib/get-current-user";
+import { refresh } from "next/cache";
 
 export async function createChat(clientChat: Chat) {
   const user = await getCurrentUser();
@@ -30,5 +31,6 @@ export async function createChat(clientChat: Chat) {
 
   await db.insert(messages).values(clientChat.messages);
 
+  refresh();
   redirect(`/chat/${clientChat.id}`);
 }

@@ -2,12 +2,13 @@
 
 ## TODO
 
-- [ ] New chats don't appear on sidebar until first message completes
 - [ ] Use Seb's StreamReader
 - [ ] Mobile designs
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
 - [ ] Message composer resets after creating a new chat (due to redirect from homepage)
+- [ ] Optimistic chats on creation
+- [x] New chats don't appear on sidebar until first message completes
 - [x] In-progress indicator on sidebar
 - [x] Message composer: disable while streaming.
 - [x] Message composer resets after action completes
