@@ -2,9 +2,6 @@
 
 ## TODO
 
-- [ ] Sign up page: Show error for duplicate email
-- [ ] Sign up page: Show error for short password
-- [ ] Sign up page: Show error for bad email
 - [ ] Polish autocomplete for email/password on sign-in/sign-up
 - [ ] Message composer resets after action completes
 - [ ] Use Seb's StreamReader
@@ -13,6 +10,9 @@
 - [ ] Autogenerate chat title name
 - [ ] Delete chats
 - [ ] Try Redis stream?
+- [x] Sign up page: Show error for duplicate email
+- [x] Sign up page: Show error for short password
+- [x] Sign up page: Show error for bad email
 - [x] Focus input field after a navigation
 - [x] Look at initial paint bc of sidebar thing
 - [x] Login page: Show error for bad login info
