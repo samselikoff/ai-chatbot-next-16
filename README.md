@@ -2,7 +2,6 @@
 
 ## TODO
 
-- [ ] Polish autocomplete for email/password on sign-in/sign-up
 - [ ] Message composer resets after action completes
 - [ ] Use Seb's StreamReader
 - [ ] Mobile designs
