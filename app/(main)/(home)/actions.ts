@@ -13,13 +13,12 @@ export async function createChat(clientChat: Chat) {
 
   const client = new OpenAI();
   const response = await client.responses.create({
-    model: "gpt-3.5-turbo",
-    // model: "gpt-4",
+    model: "gpt-4.1",
     input: [
       {
         role: "assistant",
         content:
-          "Please respond with a short, few-word title for a conversation where the user's first question is provided in the next message. Don't return any punctuation, or anything other than the title as plain text.",
+          "Please respond with a short, few-word title for a conversation where the user's first question is provided in the next message. Just return the title as plain text, capitalized using sentence case.",
       },
       { role: "user", content: clientChat.messages[0].content },
     ],

@@ -68,7 +68,7 @@ async function Chats() {
         <div key={chat.id} className="group relative mx-2">
           <NavLink
             href={`/chat/${chat.id}`}
-            className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-900 group-hover:bg-gray-200 group-has-data-popup-open:bg-gray-200 data-active:bg-gray-300"
+            className="block w-full min-w-0 items-center justify-between truncate rounded-lg py-2 pr-6 pl-3 text-sm text-gray-900 group-hover:bg-gray-200 group-has-data-popup-open:bg-gray-200 data-active:bg-gray-300"
           >
             {chat.title}
           </NavLink>
