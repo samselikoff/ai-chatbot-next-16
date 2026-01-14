@@ -8,6 +8,7 @@ export type User = {
 };
 
 export async function getCurrentUser(): Promise<User> {
+  "use cache: private";
   const { userId } = await getSession();
 
   if (!userId) {

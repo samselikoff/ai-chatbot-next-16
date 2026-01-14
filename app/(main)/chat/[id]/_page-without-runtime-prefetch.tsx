@@ -1,19 +1,11 @@
 import Spinner from "@/components/Spinner";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/get-current-user";
-import { cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Client from "./client";
 
-export const unstable_prefetch = {
-  mode: "runtime",
-  samples: [{}],
-};
-
 export default async function Page({ params }: PageProps<"/chat/[id]">) {
-  const chatPromise = getChat(params);
-
   return (
     <Suspense
       fallback={
@@ -22,26 +14,18 @@ export default async function Page({ params }: PageProps<"/chat/[id]">) {
         </div>
       }
     >
-      {chatPromise.then((chat) => (
-        <Client chat={chat} />
+      {params.then((p) => (
+        <Content chatId={p.id} />
       ))}
     </Suspense>
   );
 }
 
-async function getChat(params: PageProps<"/chat/[id]">["params"]) {
-  const { id } = await params;
-  const user = await getCurrentUser();
-
-  return getChatWithSessionCookie(id, user.id);
-}
-
-async function getChatWithSessionCookie(chatId: string, userId: string) {
-  "use cache";
-  cacheTag(`chat:${chatId}`);
-
+async function Content({ chatId }: { chatId: string }) {
+  const currentUser = await getCurrentUser();
   const chat = await db.query.chats.findFirst({
-    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
+    where: (t, { and, eq }) =>
+      and(eq(t.id, chatId), eq(t.userId, currentUser.id)),
     with: {
       messages: {
         columns: {
@@ -65,5 +49,5 @@ async function getChatWithSessionCookie(chatId: string, userId: string) {
     notFound();
   }
 
-  return chat;
+  return <Client chat={chat} />;
 }
