@@ -1,4 +1,3 @@
-import { Dots } from "@/components/Dots";
 import { NavLink } from "@/components/NavLink";
 import { db } from "@/db";
 import { chats, messages } from "@/db/schema";
