@@ -2,6 +2,7 @@
 
 ## TODO
 
+- [ ] Use Variants for logged-in/logged-out states
 - [ ] Autogenerate chat title name
 - [ ] Mobile designs
 - [ ] Use Seb's StreamReader (https://vercel.slack.com/archives/C07CJPHL49E/p1763676431200339?thread_ts=1763582669.158219&cid=C07CJPHL49E)
@@ -29,11 +30,11 @@
 
 ## Bugs + papercuts
 
-- [ ] Diagnose why creating a chat sometimes shows Suspense boundary. (E.g., Load app, create chat, press back button, create new chat.)
+- [x] (Doesnt happen anymore.) Diagnose why creating a chat sometimes shows Suspense boundary. (E.g., Load app, create chat, press back button, create new chat.)
 
 ## Questions
 
-- [ ] Got error on /chat/[id] page because runtime prefetch. Ask about await connection in getCurrentUser.
+- [x] (Doesnt happen anymore.) Got error on /chat/[id] page because runtime prefetch. Ask about await connection in getCurrentUser.
 
 ## Future
 
