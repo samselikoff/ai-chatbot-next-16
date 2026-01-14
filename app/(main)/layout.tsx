@@ -1,5 +1,5 @@
-import { MessageStreams } from './_components/MessageStreams';
-import { Sidebar } from './_components/Sidebar';
+import { MessageStreams } from "./_components/MessageStreams";
+import { Sidebar } from "./_components/Sidebar";
 
 export default function RootLayout({
   children,

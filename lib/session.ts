@@ -1,21 +1,21 @@
-import 'server-only';
+import "server-only";
 
-import { cookies } from 'next/headers';
-import { getIronSession, unsealData } from 'iron-session';
+import { cookies } from "next/headers";
+import { getIronSession, unsealData } from "iron-session";
 
 const sessionOptions = {
-  cookieName: 'app_session',
+  cookieName: "app_session",
   password: process.env.SESSION_PASSWORD!,
   cookieOptions: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
   },
 };
 
 type SessionData = {
-  userId: string;
+  userId?: string;
 };
 
 export async function getSession() {

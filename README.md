@@ -2,8 +2,8 @@
 
 ## TODO
 
-- [ ] Use Variants for logged-in/logged-out states
 - [ ] Mobile designs
+- [ ] Use Variants for logged-in/logged-out states
 - [ ] Use Seb's StreamReader (https://vercel.slack.com/archives/C07CJPHL49E/p1763676431200339?thread_ts=1763582669.158219&cid=C07CJPHL49E)
 - [ ] Optimistic chats on creation
 - [ ] Message composer resets after creating a new chat (due to redirect from homepage)

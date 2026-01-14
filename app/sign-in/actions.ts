@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { getSession } from "@/lib/session";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 
@@ -44,6 +45,8 @@ export async function signIn(
   const session = await getSession();
   session.userId = user.id;
   await session.save();
+
+  (await cookies()).set("isLoggedIn", "1");
 
   redirect("/");
 }

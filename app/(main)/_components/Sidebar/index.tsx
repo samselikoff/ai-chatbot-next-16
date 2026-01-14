@@ -3,12 +3,11 @@ import { NavLink } from "@/components/NavLink";
 import { db } from "@/db";
 import { chats, messages } from "@/db/schema";
 import { getCurrentUser } from "@/lib/get-current-user";
-import { getSession } from "@/lib/session";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import { and, desc, eq, sql } from "drizzle-orm";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { logout } from "./actions";
 import { ChatLinkMenu } from "./ChatLinkMenu";
 
 export async function Sidebar() {
@@ -95,16 +94,7 @@ async function UserInfo() {
     <div className="flex justify-between gap-2 border-t border-gray-300 p-4 text-sm">
       <p className="min-w-0 truncate">{currentUser?.email ?? "nope"}</p>
       <div className="shrink-0">
-        <form
-          action={async () => {
-            "use server";
-            const session = await getSession();
-            session.destroy();
-            await session.save();
-
-            redirect("/sign-in");
-          }}
-        >
+        <form action={logout}>
           <button
             className="cursor-pointer text-gray-500 hover:text-gray-900"
             type="submit"
