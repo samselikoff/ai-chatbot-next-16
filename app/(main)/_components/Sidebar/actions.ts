@@ -12,10 +12,6 @@ import { redirect } from "next/navigation";
 export async function deleteChat(chatId: string, shouldRedirect: boolean) {
   const user = await getCurrentUser();
 
-  if (!user) {
-    return;
-  }
-
   await db
     .delete(chats)
     .where(and(eq(chats.id, chatId), eq(chats.userId, user.id)));
@@ -34,5 +30,5 @@ export async function logout() {
 
   (await cookies()).delete("isLoggedIn");
 
-  redirect("/sign-in");
+  redirect("/");
 }
