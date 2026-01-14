@@ -3,11 +3,12 @@
 ## TODO
 
 - [ ] Use Variants for logged-in/logged-out states
-- [ ] Autogenerate chat title name
 - [ ] Mobile designs
 - [ ] Use Seb's StreamReader (https://vercel.slack.com/archives/C07CJPHL49E/p1763676431200339?thread_ts=1763582669.158219&cid=C07CJPHL49E)
 - [ ] Optimistic chats on creation
 - [ ] Message composer resets after creating a new chat (due to redirect from homepage)
+- [ ] RefreshOnFocus?
+- [x] Autogenerate chat title name
 - [x] Delete chats
 - [x] Remove runtime prefetching for now
 - [x] New chats don't appear on sidebar until first message completes
@@ -34,8 +35,14 @@
 
 ## Questions
 
+- [ ] How to update the chat title out of band? No way to kick off an action after createChat action finishes.
 - [x] (Doesnt happen anymore.) Got error on /chat/[id] page because runtime prefetch. Ask about await connection in getCurrentUser.
 
 ## Future
 
 - [ ] Try Redis stream?
+
+## Cool things
+
+- Deleting a chat conditionally redirects - and if it does it returns the UI for the home page in the same roundtrip as the action.
+- PPR: Can start typing a new chat instantly - the message composer is in the PPR shell.
