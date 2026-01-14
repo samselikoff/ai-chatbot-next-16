@@ -1,14 +1,15 @@
+import { Dots } from "@/components/Dots";
+import { NavLink } from "@/components/NavLink";
 import { db } from "@/db";
+import { chats, messages } from "@/db/schema";
 import { getCurrentUser } from "@/lib/get-current-user";
 import { getSession } from "@/lib/session";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
-import Link from "next/link";
-import { Suspense } from "react";
-import { ChatLink } from "./ChatLink";
-import { redirect } from "next/navigation";
-import { chats, messages } from "@/db/schema";
 import { and, desc, eq, sql } from "drizzle-orm";
-import { Dots } from "@/components/Dots";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { ChatLinkMenu } from "./ChatLinkMenu";
 
 export async function Sidebar() {
   return (
@@ -64,15 +65,24 @@ async function Chats() {
       )}
 
       {sidebarChats.map((chat) => (
-        <ChatLink
-          key={chat.id}
-          href={`/chat/${chat.id}`}
-          className="mx-2 inline-flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-900 hover:bg-gray-200 data-active:bg-gray-300"
-        >
-          {chat.title}
+        <div key={chat.id} className="group relative mx-2">
+          <NavLink
+            href={`/chat/${chat.id}`}
+            className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-900 group-hover:bg-gray-200 group-has-data-popup-open:bg-gray-200 data-active:bg-gray-300"
+          >
+            {chat.title}
+          </NavLink>
 
-          {chat.isStreaming && <Dots />}
-        </ChatLink>
+          <div className="absolute inset-y-0 right-0 flex items-center">
+            {chat.isStreaming ? (
+              <span className="mr-2 inline-flex items-center">
+                <Dots />
+              </span>
+            ) : (
+              <ChatLinkMenu chatId={chat.id} chatTitle={chat.title ?? ""} />
+            )}
+          </div>
+        </div>
       ))}
     </>
   );
