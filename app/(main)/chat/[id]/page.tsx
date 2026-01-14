@@ -33,10 +33,10 @@ async function getChat(params: PageProps<"/chat/[id]">["params"]) {
   const { id } = await params;
   const user = await getCurrentUser();
 
-  return getChatWithSessionCookie(id, user.id);
+  return getChatForUser(id, user.id);
 }
 
-async function getChatWithSessionCookie(chatId: string, userId: string) {
+async function getChatForUser(chatId: string, userId: string) {
   "use cache";
   cacheTag(`chat:${chatId}`);
 

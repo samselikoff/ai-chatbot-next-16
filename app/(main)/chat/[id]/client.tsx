@@ -5,9 +5,11 @@ import { MessageComposer } from "../../_components/MessageComposer";
 import { Chat, Message, MessageLog } from "../../_components/MessageLog";
 import { useMessageStreams } from "../../_components/MessageStreams/use-message-streams";
 import { saveMessages } from "./actions";
+import { useOptimisticChats } from "../../_components/OptimisticChatsProvider/use-optimistic-chats";
 
 export default function Client({ chat }: { chat: Chat }) {
   const { createMessageStream } = useMessageStreams();
+  const { setStreamingChatIds } = useOptimisticChats();
   const [optimisticMessages, setOptimisticMessages] = useOptimistic<Message[]>(
     [],
   );
@@ -47,6 +49,8 @@ export default function Client({ chat }: { chat: Chat }) {
           ];
 
           setOptimisticMessages(messages);
+          setStreamingChatIds((ids) => [...ids, chat.id]);
+
           createMessageStream(messages);
 
           await saveMessages(messages);

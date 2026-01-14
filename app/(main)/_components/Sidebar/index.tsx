@@ -9,6 +9,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { logout } from "./actions";
 import { ChatLinkMenu } from "./ChatLinkMenu";
+import { OptimisticChats } from "./OptimisticChats";
+import { Streaming } from "./Streaming";
 
 export async function Sidebar() {
   return (
@@ -63,6 +65,8 @@ async function Chats() {
         <p className="mx-2 px-3 py-2 text-sm text-gray-500">Your chats</p>
       )}
 
+      <OptimisticChats />
+
       {sidebarChats.map((chat) => (
         <div key={chat.id} className="group relative mx-2">
           <NavLink
@@ -73,13 +77,9 @@ async function Chats() {
           </NavLink>
 
           <div className="absolute inset-y-0 right-0 flex items-center">
-            {chat.isStreaming ? (
-              <span className="mr-2 inline-flex items-center">
-                <Dots />
-              </span>
-            ) : (
+            <Streaming isStreaming={chat.isStreaming} chatId={chat.id}>
               <ChatLinkMenu chatId={chat.id} chatTitle={chat.title ?? ""} />
-            )}
+            </Streaming>
           </div>
         </div>
       ))}

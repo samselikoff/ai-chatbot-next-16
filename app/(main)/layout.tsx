@@ -1,4 +1,5 @@
 import { MessageStreams } from "./_components/MessageStreams";
+import OptimisticChatsProvider from "./_components/OptimisticChatsProvider";
 import { Sidebar } from "./_components/Sidebar";
 
 export default function RootLayout({
@@ -7,12 +8,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <MessageStreams>
-      <div className="flex w-full">
-        <Sidebar />
+    <OptimisticChatsProvider>
+      <MessageStreams>
+        <div className="flex w-full">
+          <Sidebar />
 
-        <main className="grow">{children}</main>
-      </div>
-    </MessageStreams>
+          <main className="grow">{children}</main>
+        </div>
+      </MessageStreams>
+    </OptimisticChatsProvider>
   );
 }
