@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { getSession } from "@/lib/session";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 
@@ -24,7 +25,10 @@ export async function signUp(
     .safeParse(Object.fromEntries(formData));
 
   if (!result.success) {
-    return { error: "Please enter a valid email and password (min 8 characters).", formData };
+    return {
+      error: "Please enter a valid email and password (min 8 characters).",
+      formData,
+    };
   }
 
   const { email, password } = result.data;
@@ -46,6 +50,8 @@ export async function signUp(
   const session = await getSession();
   session.userId = user.id;
   await session.save();
+
+  (await cookies()).set("isLoggedIn", "1");
 
   redirect("/");
 }
