@@ -45,7 +45,7 @@ export async function Sidebar({
           <Chats closeDialogOnNavigate={closeDialogOnNavigate} />
         </div>
         <div className="flex shrink-0 flex-col">
-          <UserInfo />
+          <UserInfo closeDialogOnNavigate={closeDialogOnNavigate} />
         </div>
       </Suspense>
     </nav>
@@ -111,11 +111,11 @@ async function Chats({
 function MaybeCloseDialog({
   shouldClose,
   children,
-  className,
+  className = "",
 }: {
   shouldClose: boolean;
   children: ReactNode;
-  className: string;
+  className?: string;
 }) {
   if (shouldClose) {
     return <Dialog.Close className={className}>{children}</Dialog.Close>;
@@ -124,7 +124,11 @@ function MaybeCloseDialog({
   return children;
 }
 
-async function UserInfo() {
+async function UserInfo({
+  closeDialogOnNavigate,
+}: {
+  closeDialogOnNavigate: boolean;
+}) {
   const currentUser = await getCurrentUser();
 
   return (
@@ -132,12 +136,21 @@ async function UserInfo() {
       <p className="min-w-0 truncate">{currentUser?.email ?? "nope"}</p>
       <div className="shrink-0">
         <form action={logout}>
-          <button
-            className="cursor-pointer text-gray-500 hover:text-gray-900"
-            type="submit"
-          >
-            Sign out
-          </button>
+          {closeDialogOnNavigate ? (
+            <Dialog.Close
+              className="cursor-pointer text-gray-500 hover:text-gray-900"
+              type="submit"
+            >
+              Sign out
+            </Dialog.Close>
+          ) : (
+            <button
+              className="cursor-pointer text-gray-500 hover:text-gray-900"
+              type="submit"
+            >
+              Sign out
+            </button>
+          )}
         </form>
       </div>
     </div>
