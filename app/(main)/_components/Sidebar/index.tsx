@@ -24,19 +24,22 @@ export async function Sidebar({
           Next 16 Chatbot
         </p>
 
-        <MaybeCloseDialog
-          shouldClose={closeDialogOnNavigate}
-          className="block w-full text-left"
-        >
-          <Link
-            href="/"
-            className="m-2 mb-4 inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-200"
+        <div className="m-2 mb-4">
+          <MaybeCloseDialog
+            shouldClose={closeDialogOnNavigate}
+            className="block w-full text-left"
           >
-            <PencilSquareIcon className="size-4" />
-            New chat
-          </Link>
-        </MaybeCloseDialog>
+            <Link
+              href="/"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-200"
+            >
+              <PencilSquareIcon className="size-4" />
+              New chat
+            </Link>
+          </MaybeCloseDialog>
+        </div>
       </div>
+
       <Suspense>
         <div className="flex grow flex-col overflow-y-auto py-2">
           <Chats closeDialogOnNavigate={closeDialogOnNavigate} />

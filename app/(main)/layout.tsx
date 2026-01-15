@@ -21,7 +21,7 @@ export default function RootLayout({
                 </Dialog.Trigger>
               </header>
 
-              <Dialog.Portal>
+              <Dialog.Portal className="md:hidden">
                 <Dialog.Backdrop className="fixed inset-0 min-h-dvh bg-black/20 transition-opacity ease-[cubic-bezier(0.36,0.66,0.04,1)] data-ending-style:opacity-0 data-ending-style:duration-450 data-starting-style:opacity-0 data-starting-style:duration-400" />
                 <Dialog.Popup className="fixed inset-y-0 left-0 max-w-[calc(100vw-3rem)] shadow transition ease-[cubic-bezier(0.36,0.66,0.04,1)] data-ending-style:-translate-x-full data-ending-style:duration-450 data-starting-style:-translate-x-full data-starting-style:duration-400">
                   <Sidebar closeDialogOnNavigate />
