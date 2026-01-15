@@ -16,7 +16,7 @@ export function MessageComposer({
   const [isPending, startTransition] = useTransition();
 
   useLayoutEffect(() => {
-    if (window.innerWidth > 768) {
+    if (window.innerWidth >= 768) {
       inputRef.current?.focus();
     }
   }, []);
@@ -35,6 +35,13 @@ export function MessageComposer({
 
           if (message === "") return;
           formRef.current?.reset();
+
+          if (
+            window.innerWidth < 768 &&
+            document.activeElement instanceof HTMLElement
+          ) {
+            document.activeElement.blur();
+          }
 
           startTransition(async () => {
             await submitAction(message);
