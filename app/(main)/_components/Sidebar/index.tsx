@@ -11,6 +11,7 @@ import { ChatLinkMenu } from "./ChatLinkMenu";
 import { OptimisticChats } from "./OptimisticChats";
 import { Streaming } from "./Streaming";
 import { Dialog } from "@base-ui/react/dialog";
+import { HasChats } from "./HasChats";
 
 export async function Sidebar({
   closeDialogOnNavigate = false,
@@ -77,9 +78,9 @@ async function Chats({
 
   return (
     <>
-      {sidebarChats.length > 0 && (
+      <HasChats hasServerChats={sidebarChats.length > 0}>
         <p className="mx-2 px-3 py-2 text-sm text-gray-500">Your chats</p>
-      )}
+      </HasChats>
 
       <OptimisticChats />
 
