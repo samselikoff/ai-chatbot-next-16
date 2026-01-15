@@ -15,7 +15,7 @@ export default function Home() {
   );
 
   return (
-    <div className="mx-auto flex h-dvh max-w-2xl flex-col justify-center">
+    <div className="mx-auto flex w-full max-w-2xl grow flex-col justify-center md:h-dvh">
       {optimisticMessages.length > 0 ? (
         <div className="grow">
           <MessageLog messages={optimisticMessages} />

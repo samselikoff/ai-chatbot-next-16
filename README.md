@@ -2,13 +2,13 @@
 
 ## TODO
 
-- [ ] Mobile designs
 - [ ] Use Seb's StreamReader (https://vercel.slack.com/archives/C07CJPHL49E/p1763676431200339?thread_ts=1763582669.158219&cid=C07CJPHL49E)
 - [ ] Message composer resets after creating a new chat (due to redirect from homepage)
 - [ ] RefreshOnFocus?
 - [ ] Race condition: if you slow down chat creation, the streaming messages could finish before the messages exist in the db. Can we enqueue the final save once streaming is done somehow?
 - [ ] Animate new chats in sidebar on enter
 - [ ] Animate initial load of sidebar chats
+- [x] Mobile designs
 - [x] Use Variants for logged-in/logged-out states
 - [x] Optimistic streaming indicator chats in sidebar on new messages
 - [x] Optimistic chats in sidebar on creation

@@ -27,7 +27,13 @@ export function Dots() {
     const el1 = ref1.current;
     const el2 = ref2.current;
     const el3 = ref3.current;
-    if (!el1 || !el2 || !el3) return;
+
+    if (
+      !el1?.getAnimations()[0] ||
+      !el2?.getAnimations()[0] ||
+      !el3?.getAnimations()[0]
+    )
+      return;
 
     const offset = Date.now() % DURATION;
 

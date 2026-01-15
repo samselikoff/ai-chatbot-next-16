@@ -16,14 +16,16 @@ export function MessageComposer({
   const [isPending, startTransition] = useTransition();
 
   useLayoutEffect(() => {
-    inputRef.current?.focus();
+    if (window.innerWidth > 768) {
+      inputRef.current?.focus();
+    }
   }, []);
 
   return (
-    <div className="px-4">
+    <div className="sticky bottom-0 px-4">
       <form
         ref={formRef}
-        className="group mx-auto mb-8 w-full max-w-xl"
+        className="group mx-auto w-full max-w-xl"
         onSubmit={(e) => {
           e.preventDefault();
 
@@ -39,12 +41,12 @@ export function MessageComposer({
           });
         }}
       >
-        <div className="relative">
+        <div className="relative bg-[linear-gradient(to_bottom,transparent_50%,white_50%)]">
           <input
             name="message"
             type="text"
             placeholder="Ask anything"
-            className="block w-full rounded-full border-[0.5px] border-black/25 px-6 py-4 shadow-md shadow-black/5 focus:outline-none"
+            className="block w-full rounded-full border-[0.5px] border-black/25 bg-white px-6 py-4 shadow-md shadow-black/5 focus:outline-none"
             ref={inputRef}
             required
           />
@@ -60,6 +62,7 @@ export function MessageComposer({
           </div>
         </div>
       </form>
+      <div className="h-4 bg-white md:h-8" />
     </div>
   );
 }

@@ -15,17 +15,19 @@ export default async function Page({ params }: PageProps<"/chat/[id]">) {
   const chatPromise = getChat(params);
 
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center pt-20">
-          <Spinner />
-        </div>
-      }
-    >
-      {chatPromise.then((chat) => (
-        <Client chat={chat} />
-      ))}
-    </Suspense>
+    <>
+      <Suspense
+        fallback={
+          <div className="flex justify-center pt-20">
+            <Spinner />
+          </div>
+        }
+      >
+        {chatPromise.then((chat) => (
+          <Client chat={chat} />
+        ))}
+      </Suspense>
+    </>
   );
 }
 

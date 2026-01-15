@@ -17,8 +17,8 @@ export default function Client({ chat }: { chat: Chat }) {
   const isStreaming = allMessages.some((m) => m.status === "INIT");
 
   return (
-    <div className="flex h-dvh flex-col">
-      <div className="grow overflow-y-auto">
+    <div className="flex grow flex-col md:h-dvh md:overflow-y-auto">
+      <div className="grow">
         <MessageLog messages={allMessages} />
       </div>
 
