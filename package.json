@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prod": "next build && next start",
     "db:push": "drizzle-kit push",
     "build": "next build",
     "start": "next start",
