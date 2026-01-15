@@ -13,13 +13,11 @@ export default function RootLayout({
     <OptimisticChatsProvider>
       <MessageStreams>
         <div className="flex min-h-dvh w-full flex-col md:flex-row">
-          <div className="md:hidden">
+          <header className="sticky top-0 bg-white px-4 py-3 shadow-[0_1px_0_0_rgba(0,0,0,.05)] md:hidden">
             <Dialog.Root>
-              <header className="sticky top-0 bg-white px-4 py-3 shadow-[0_1px_0_0_rgba(0,0,0,.05)] md:hidden">
-                <Dialog.Trigger className="inline-flex size-9 items-center justify-center">
-                  <Bars3BottomLeftIcon className="size-6 text-gray-400" />
-                </Dialog.Trigger>
-              </header>
+              <Dialog.Trigger className="inline-flex size-9 items-center justify-center">
+                <Bars3BottomLeftIcon className="size-6 text-gray-400" />
+              </Dialog.Trigger>
 
               <Dialog.Portal className="md:hidden">
                 <Dialog.Backdrop className="fixed inset-0 min-h-dvh bg-black/20 transition-opacity ease-[cubic-bezier(0.36,0.66,0.04,1)] data-ending-style:opacity-0 data-ending-style:duration-450 data-starting-style:opacity-0 data-starting-style:duration-400" />
@@ -28,7 +26,7 @@ export default function RootLayout({
                 </Dialog.Popup>
               </Dialog.Portal>
             </Dialog.Root>
-          </div>
+          </header>
 
           <div className="max-md:hidden">
             <Sidebar />
