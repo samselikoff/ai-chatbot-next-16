@@ -2,16 +2,16 @@ import { NavLink } from "@/components/NavLink";
 import { db } from "@/db";
 import { chats, messages } from "@/db/schema";
 import { getCurrentUser } from "@/lib/get-current-user";
+import { Dialog } from "@base-ui/react/dialog";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import { and, desc, eq, sql } from "drizzle-orm";
 import Link from "next/link";
 import { ReactNode, Suspense } from "react";
 import { logout } from "./actions";
 import { ChatLinkMenu } from "./ChatLinkMenu";
+import { HasChats } from "./HasChats";
 import { OptimisticChats } from "./OptimisticChats";
 import { Streaming } from "./Streaming";
-import { Dialog } from "@base-ui/react/dialog";
-import { HasChats } from "./HasChats";
 
 export async function Sidebar({
   closeDialogOnNavigate = false,
@@ -21,9 +21,9 @@ export async function Sidebar({
   return (
     <nav className="flex h-dvh w-full shrink-0 flex-col border-gray-200 bg-white md:w-60 md:border-r md:bg-gray-100">
       <div className="flex flex-col">
-        <p className="mx-5 mt-3 text-sm font-semibold text-gray-700">
-          Next 16 Chatbot
-        </p>
+        <div className="mt-3 mr-3 ml-5 flex items-center justify-between">
+          <p className="text-sm font-semibold text-gray-700">Next 16 Chatbot</p>
+        </div>
 
         <div className="m-2 mb-4">
           <MaybeCloseDialog

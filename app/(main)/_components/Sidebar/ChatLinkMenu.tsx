@@ -21,7 +21,7 @@ export function ChatLinkMenu({
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger className="flex size-8 cursor-pointer items-center justify-center rounded text-gray-400 opacity-0 group-hover:opacity-100 group-has-data-popup-open:text-gray-800 group-has-data-popup-open:opacity-100 hover:text-gray-800">
+        <Menu.Trigger className="flex size-8 cursor-pointer items-center justify-center rounded text-gray-400 opacity-0 group-hover:opacity-100 group-has-focus:opacity-100 group-has-data-popup-open:text-gray-800 group-has-data-popup-open:opacity-100 hover:text-gray-800">
           <EllipsisVerticalIcon className="size-4" />
         </Menu.Trigger>
         <Menu.Portal>

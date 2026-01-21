@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
-  cacheMaxMemorySize: 0,
+  // cacheMaxMemorySize: 0,
 
   rewrites() {
     return {
