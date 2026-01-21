@@ -10,7 +10,10 @@ export function WhatsThis() {
 
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 min-h-dvh bg-black opacity-20" />
-        <Dialog.Popup className="fixed top-1/2 left-1/2 max-h-[calc(100dvh-3rem)] w-[650px] max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-gray-50 p-6 text-gray-900 lg:-mt-8">
+        <Dialog.Popup
+          initialFocus={false}
+          className="fixed top-1/2 left-1/2 max-h-[calc(100dvh-3rem)] w-[650px] max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-gray-50 p-6 text-gray-900"
+        >
           <Dialog.Title className="-mt-1.5 mb-1 text-xl font-medium">
             {`What's this?`}
           </Dialog.Title>
