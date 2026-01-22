@@ -2,7 +2,7 @@ import Spinner from "@/components/Spinner";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/get-current-user";
 import { cacheTag } from "next/cache";
-import { notFound } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { Suspense } from "react";
 import Client from "./client";
 
@@ -35,37 +35,43 @@ async function getChat(params: PageProps<"/chat/[id]">["params"]) {
   const { id } = await params;
   const user = await getCurrentUser();
 
-  return getChatForUser(id, user.id);
+  const chat = await getChatForUser(id, user.id);
+
+  if (!chat) {
+    redirect("/", RedirectType.replace);
+  }
+
+  return chat;
 }
 
 async function getChatForUser(chatId: string, userId: string) {
   "use cache";
   cacheTag(`chat:${chatId}`);
 
-  const chat = await db.query.chats.findFirst({
-    where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
-    with: {
-      messages: {
-        columns: {
-          id: true,
-          content: true,
-          chatId: true,
-          role: true,
-          position: true,
-          status: true,
+  try {
+    const chat = await db.query.chats.findFirst({
+      where: (t, { and, eq }) => and(eq(t.id, chatId), eq(t.userId, userId)),
+      with: {
+        messages: {
+          columns: {
+            id: true,
+            content: true,
+            chatId: true,
+            role: true,
+            position: true,
+            status: true,
+          },
+          orderBy: (t, { asc }) => asc(t.position),
         },
-        orderBy: (t, { asc }) => asc(t.position),
       },
-    },
-    columns: {
-      id: true,
-      title: true,
-    },
-  });
+      columns: {
+        id: true,
+        title: true,
+      },
+    });
 
-  if (!chat) {
-    notFound();
+    return chat ?? null;
+  } catch {
+    return null;
   }
-
-  return chat;
 }
