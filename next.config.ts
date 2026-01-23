@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   // cacheMaxMemorySize: 0,
 
+  reactCompiler: true,
+
   rewrites() {
     return {
       beforeFiles: [
